@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f5f1e8;
+  --paper-deep: #ece5d8;
+  --ink: #1e211b;
+  --muted: #686b61;
+  --moss: #56664c;
+  --sage: #b9c5ad;
+  --clay: #a45f45;
+  --line: rgba(30, 33, 27, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", system-ui,
+    sans-serif;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--sage);
+  color: var(--ink);
+}
+
+.font-serif {
+  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
+}
+
+.page-shell {
+  width: min(100% - 2rem, 82rem);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  color: var(--moss);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.button-primary,
+.button-secondary,
+.button-light {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.72rem 1.35rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: background-color 180ms ease, color 180ms ease,
+    border-color 180ms ease, transform 180ms ease;
+}
+
+.button-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.button-primary:hover {
+  background: var(--moss);
+  transform: translateY(-1px);
+}
+
+.button-secondary {
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.button-secondary:hover {
+  border-color: var(--moss);
+  color: var(--moss);
+}
+
+.button-light {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.button-light:hover {
+  background: var(--sage);
+  transform: translateY(-1px);
+}
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.2rem;
+  color: var(--moss);
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.text-link::after {
+  content: "↗";
+  font-size: 0.82rem;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+@media (min-width: 640px) {
+  .page-shell {
+    width: min(100% - 3rem, 82rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
