@@ -37,11 +37,11 @@ export function ProductMedia({
       : "object-cover";
 
   return (
-    <figure className={captionOverlay ? "relative" : undefined}>
+    <figure className={captionOverlay ? "group relative" : "group"}>
       <div className={`relative overflow-hidden bg-[#eceeea] ${frameClassName}`}>
         <Image
           alt={image.alt}
-          className={imageClassName ?? defaultImageClass}
+          className={`${imageClassName ?? defaultImageClass} transition-transform duration-300 group-hover:scale-[1.02] group-focus-within:scale-[1.02] motion-reduce:transition-none`}
           fill
           loading={priority ? "eager" : undefined}
           sizes={sizes}

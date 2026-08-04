@@ -337,6 +337,7 @@ button {
 
 .product-detail-hero-caption,
 .product-detail-module-panel,
+.product-module-hotspot,
 .product-detail-lightbox-toolbar,
 .product-detail-lightbox-close {
   border: 1px solid rgba(70, 61, 51, 0.12);
@@ -357,12 +358,124 @@ button {
   outline-offset: -4px;
 }
 
+.product-detail-control {
+  transition:
+    transform 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.product-detail-control:active {
+  transform: scale(0.985);
+}
+
+.product-detail-control:focus-visible,
+.product-detail-lightbox-tool:focus-visible {
+  outline: 2px solid #347f85;
+  outline-offset: 3px;
+}
+
+.product-detail-action-arrow {
+  display: inline-block;
+  transition: transform 180ms ease;
+}
+
+.group:hover .product-detail-action-arrow,
+.group:focus-visible .product-detail-action-arrow {
+  transform: translateX(3px);
+}
+
+.product-module-hotspot {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  min-height: 2.5rem;
+  align-items: center;
+  border-radius: 999px;
+  color: #314f49;
+  transform: translate(-50%, -50%);
+}
+
+.product-module-hotspot:active {
+  transform: translate(-50%, -50%) scale(0.98);
+}
+
+.product-module-hotspot:focus-visible {
+  outline: 2px solid #347f85;
+  outline-offset: 3px;
+}
+
+.product-module-hotspot__dot {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(86, 128, 111, 0.9);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 650;
+}
+
+.product-module-hotspot__label {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  transition:
+    max-width 220ms ease,
+    padding 220ms ease,
+    opacity 180ms ease;
+}
+
+.product-module-hotspot:hover .product-module-hotspot__label,
+.product-module-hotspot:focus-visible .product-module-hotspot__label,
+.product-module-hotspot.is-active .product-module-hotspot__label {
+  max-width: 10rem;
+  padding-inline: 0.7rem 0.85rem;
+  opacity: 1;
+}
+
 .product-detail-lightbox-toolbar {
   border-radius: 0.75rem;
 }
 
 .product-detail-lightbox-close {
   box-shadow: none;
+}
+
+.product-detail-lightbox-tool {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border: 1px solid rgba(70, 61, 51, 0.12);
+  border-radius: 999px;
+  color: #34413f;
+  font-size: 0.85rem;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    opacity 180ms ease;
+}
+
+.product-detail-lightbox-tool:active {
+  transform: scale(0.96);
+}
+
+.product-detail-lightbox-tool:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.product-detail-lightbox-canvas {
+  cursor: grab;
+}
+
+.product-detail-lightbox-canvas[data-dragging="true"] {
+  cursor: grabbing;
 }
 
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
@@ -380,6 +493,7 @@ button {
 
   .product-detail-hero-caption,
   .product-detail-module-panel,
+  .product-module-hotspot,
   .product-detail-lightbox-toolbar,
   .product-detail-lightbox-close {
     background: rgba(250, 248, 243, 0.72);
@@ -389,6 +503,15 @@ button {
 
   .product-detail-lightbox-close {
     background: rgba(250, 248, 243, 0.86);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-detail-control,
+  .product-detail-action-arrow,
+  .product-module-hotspot__label,
+  .product-detail-lightbox-tool {
+    transition: none;
   }
 }
 

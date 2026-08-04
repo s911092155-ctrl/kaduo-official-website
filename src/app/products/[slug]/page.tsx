@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ImageLightbox } from "@/components/products/product-detail/image-lightbox";
+import {
+  ImageLightbox,
+  type LightboxItem,
+} from "@/components/products/product-detail/image-lightbox";
+import {
+  MaterialExplorer,
+  type MaterialExplorerItem,
+} from "@/components/products/product-detail/material-explorer";
 import {
   ModuleExplorer,
   type ModuleExplorerItem,
@@ -124,6 +131,50 @@ export default async function ProductDetailPage({
     ...prototypeImages.slice(1),
     ...drawingImages.slice(2),
   ];
+  const designGallery = [
+    dimensionImages[0]
+      ? { image: dimensionImages[0], label: "整体尺寸图" }
+      : null,
+    drawingImages[0]
+      ? { image: drawingImages[0], label: "模块系统图" }
+      : null,
+    drawingImages[1]
+      ? { image: drawingImages[1], label: "组装步骤设计图" }
+      : null,
+  ].filter((item): item is LightboxItem => Boolean(item));
+  const acrylicDescription =
+    product.materials.find((item) => item.includes("高透亚克力")) ??
+    product.materialDescription;
+  const woodDescription = product.materials.find((item) =>
+    item.includes("浅色木质饰面平台"),
+  );
+  const connectionDescription =
+    product.materials.find((item) => item.includes("连接与固定结构")) ??
+    product.features.find((feature) => feature.title === "模块化组合")
+      ?.description;
+  const materialItems = [
+    acrylicDescription && (detailImages[0] ?? mainImage)
+      ? {
+          name: "高透亚克力",
+          description: acrylicDescription,
+          image: detailImages[0] ?? mainImage,
+        }
+      : null,
+    woodDescription && (prototypeImages[0] ?? detailImages[0])
+      ? {
+          name: "木质平台",
+          description: woodDescription,
+          image: prototypeImages[0] ?? detailImages[0],
+        }
+      : null,
+    connectionDescription && (drawingImages[0] ?? detailImages[1])
+      ? {
+          name: "模块连接",
+          description: connectionDescription,
+          image: drawingImages[0] ?? detailImages[1],
+        }
+      : null,
+  ].filter((item): item is MaterialExplorerItem => Boolean(item));
   const sectionClass =
     "mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10";
 
@@ -172,10 +223,11 @@ export default async function ProductDetailPage({
             ) : null}
             {product.inquiryLabel ? (
               <Link
-                className="mt-5 inline-flex min-h-12 items-center justify-center bg-[#273130] px-7 text-sm font-medium text-white transition-colors hover:bg-[var(--moss)] sm:mt-7"
+                className="product-detail-control group mt-5 inline-flex min-h-12 items-center justify-center gap-3 bg-[#273130] px-7 text-sm font-medium text-white hover:bg-[var(--moss)] sm:mt-7"
                 href="/contact"
               >
                 {product.inquiryLabel}
+                <span aria-hidden="true" className="product-detail-action-arrow">→</span>
               </Link>
             ) : null}
           </div>
@@ -278,14 +330,15 @@ export default async function ProductDetailPage({
           <ModuleExplorer
             featured={featuredModules}
             note={product.moduleNote}
+            overviewImage={mainImage ?? featuredModules[0].image}
             remaining={remainingModules}
           />
           <div className="mt-9 border-t border-black/10 pt-6 sm:hidden">
             <Link
-              className="inline-flex min-h-11 items-center gap-3 text-sm font-medium text-[var(--moss)]"
+              className="product-detail-control group inline-flex min-h-11 items-center gap-3 text-sm font-medium text-[var(--moss)]"
               href="/contact"
             >
-              预约产品咨询 <span aria-hidden="true">→</span>
+              预约产品咨询 <span aria-hidden="true" className="product-detail-action-arrow">→</span>
             </Link>
           </div>
         </section>
@@ -306,18 +359,7 @@ export default async function ProductDetailPage({
                   {product.materialDescription}
                 </p>
               ) : null}
-              {product.materials.length > 0 ? (
-                <ul className="mt-8 max-w-[37rem] border-t border-black/12">
-                  {product.materials.map((material) => (
-                    <li className="border-b border-black/12 py-4 text-sm" key={material}>
-                      {material}
-                    </li>
-                  ))}
-                  {product.features.some((feature) => feature.title === "模块化组合") ? (
-                    <li className="border-b border-black/12 py-4 text-sm">模块化结构</li>
-                  ) : null}
-                </ul>
-              ) : null}
+              {materialItems.length > 0 ? <MaterialExplorer items={materialItems} /> : null}
               {product.materialNote ? (
                 <p className="mt-6 max-w-[37rem] text-xs leading-6 text-[#747c79]">
                   {product.materialNote}
@@ -347,10 +389,18 @@ export default async function ProductDetailPage({
               {(dimensionImages[0] || drawingImages[0]) ? (
                 <div className="mt-8 grid grid-cols-2 gap-5">
                   {dimensionImages[0] ? (
-                    <ImageLightbox image={dimensionImages[0]} label="整体尺寸图" />
+                    <ImageLightbox
+                      gallery={designGallery}
+                      image={dimensionImages[0]}
+                      label="整体尺寸图"
+                    />
                   ) : null}
                   {drawingImages[0] ? (
-                    <ImageLightbox image={drawingImages[0]} label="模块系统图" />
+                    <ImageLightbox
+                      gallery={designGallery}
+                      image={drawingImages[0]}
+                      label="模块系统图"
+                    />
                   ) : null}
                 </div>
               ) : null}
@@ -384,7 +434,11 @@ export default async function ProductDetailPage({
               />
             ) : null}
             {prototypePrimaryImages[1] ? (
-              <ImageLightbox image={prototypePrimaryImages[1]} label="组装步骤设计图" />
+              <ImageLightbox
+                gallery={designGallery}
+                image={prototypePrimaryImages[1]}
+                label="组装步骤设计图"
+              />
             ) : null}
           </div>
           {extraPrototypeImages.length > 0 ? (
@@ -497,17 +551,19 @@ export default async function ProductDetailPage({
             </div>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
               <Link
-                className="inline-flex min-h-12 w-full items-center justify-center bg-white px-6 text-sm font-medium text-[#273130] transition-colors hover:bg-[#d9f0f3] sm:w-auto"
+                className="product-detail-control group inline-flex min-h-12 w-full items-center justify-center gap-3 bg-white px-6 text-sm font-medium text-[#273130] hover:bg-[#d9f0f3] sm:w-auto"
                 href="/contact"
               >
                 {product.consultation.primaryLabel}
+                <span aria-hidden="true" className="product-detail-action-arrow">→</span>
               </Link>
               {product.consultation.secondaryLabel ? (
                 <Link
-                  className="inline-flex min-h-12 w-full items-center justify-center border border-white/35 px-6 text-sm font-medium text-white transition-colors hover:border-white/75 sm:w-auto"
+                  className="product-detail-control group inline-flex min-h-12 w-full items-center justify-center gap-3 border border-white/35 px-6 text-sm font-medium text-white hover:border-white/75 sm:w-auto"
                   href="/contact"
                 >
                   {product.consultation.secondaryLabel}
+                  <span aria-hidden="true" className="product-detail-action-arrow">→</span>
                 </Link>
               ) : null}
             </div>
