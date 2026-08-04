@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ScrollHeader } from "@/components/motion/scroll-header";
 
 const navigation = [
   { href: "/products", label: "产品中心" },
@@ -9,7 +10,7 @@ const navigation = [
 
 export function SiteHeader() {
   return (
-    <header className="site-header sticky top-0 z-50 border-b backdrop-blur-xl">
+    <ScrollHeader>
       <div className="page-shell flex min-h-20 flex-col items-start justify-center gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-0">
         <Link
           className="site-brand flex shrink-0 items-baseline gap-2 font-semibold"
@@ -31,6 +32,6 @@ export function SiteHeader() {
           </ul>
         </nav>
       </div>
-    </header>
+    </ScrollHeader>
   );
 }
