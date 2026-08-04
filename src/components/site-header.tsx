@@ -9,21 +9,21 @@ const navigation = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[color:rgba(245,241,232,0.92)] backdrop-blur-xl">
+    <header className="site-header sticky top-0 z-50 border-b backdrop-blur-xl">
       <div className="page-shell flex min-h-20 flex-col items-start justify-center gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-0">
         <Link
-          className="flex shrink-0 items-baseline gap-2 font-semibold tracking-[0.12em]"
+          className="site-brand flex shrink-0 items-baseline gap-2 font-semibold"
           href="/"
           aria-label="凯朵 KADUO 首页"
         >
           <span className="text-lg">凯朵</span>
-          <span className="text-xs text-[var(--muted)]">KADUO</span>
+          <span className="text-xs">KADUO</span>
         </Link>
         <nav aria-label="主导航" className="w-full sm:w-auto">
-          <ul className="flex items-center justify-between gap-2 text-sm text-[var(--muted)] sm:justify-start sm:gap-8">
+          <ul className="flex items-center justify-between gap-2 text-xs sm:justify-start sm:gap-8">
             {navigation.map((item) => (
               <li key={item.href}>
-                <Link className="transition-colors hover:text-[var(--ink)]" href={item.href}>
+                <Link className="site-nav-link transition-colors" href={item.href}>
                   {item.label}
                 </Link>
               </li>

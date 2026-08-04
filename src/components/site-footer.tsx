@@ -9,14 +9,14 @@ const footerLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[var(--line)] bg-[var(--paper-deep)]">
+    <footer className="site-footer border-t">
       <div className="page-shell grid gap-10 py-12 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
-          <p className="font-serif text-3xl">凯朵 KADUO</p>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-            高端宠物家居与人宠共居美学品牌
+          <p className="text-3xl font-semibold tracking-[-0.04em]">凯朵 KADUO</p>
+          <p className="mt-3 text-sm leading-6">
+            高端宠物家具 / 亚克力空间设计
           </p>
-          <p className="mt-8 text-xs text-[var(--muted)]">
+          <p className="mt-8 text-xs opacity-55">
             © {new Date().getFullYear()} KADUO. 网站内容持续完善中。
           </p>
         </div>
@@ -24,7 +24,7 @@ export function SiteFooter() {
           <ul className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm sm:text-right">
             {footerLinks.map((link) => (
               <li key={link.href}>
-                <Link className="text-[var(--muted)] hover:text-[var(--ink)]" href={link.href}>
+                <Link className="opacity-65 transition-opacity hover:opacity-100" href={link.href}>
                   {link.label}
                 </Link>
               </li>
