@@ -1,3 +1,5 @@
+import { assertValidProducts } from "@/data/product-validation";
+
 export type ProductStatus = "draft" | "published" | "archived";
 
 export type ProductImage = {
@@ -173,6 +175,8 @@ export const products: Product[] = [
     developmentOnly: true,
   },
 ];
+
+assertValidProducts(products);
 
 function sortProducts(items: Product[]) {
   return [...items].sort((a, b) => a.sortOrder - b.sortOrder);

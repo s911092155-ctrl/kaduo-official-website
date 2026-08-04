@@ -83,6 +83,21 @@ npm run build
 
 如果只是临时下线产品，把 `published` 改成 `draft` 即可；不需要删除整条记录。`developmentOnly: true` 只用于本地开发版式检查，生产环境始终隐藏，正式产品必须设为 `false`。
 
+### 发布前必须填写的资料
+
+把产品状态改成 `published` 前，至少要确认并填写：
+
+- 中文名称
+- slug
+- 产品系列
+- 简短介绍
+- 产品主图及其 alt 文字
+- 咨询按钮文案
+
+项目会在构建时自动检查 `src/data/products.ts`。重复的 `id` 或 `slug`、格式不正确的 slug、空白图片 alt、错误的本地图片路径和无效的 `sortOrder` 也会阻止构建。报错信息会写明产品和字段，先修正数据，再重新运行 `npm run build`。
+
+草稿和归档产品可以保留 `null` 或空数组，不会因为资料尚未完成而构建失败。`developmentOnly: true` 的记录不能设为 `published`。
+
 ### 怎样替换产品图片
 
 1. 在 `public/images/products/` 下为产品建立独立目录。
