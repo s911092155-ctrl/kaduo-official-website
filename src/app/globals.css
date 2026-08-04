@@ -185,8 +185,8 @@ button {
 .mobile-nav__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(26, 29, 29, 0.38);
-  backdrop-filter: blur(2px);
+  background: rgba(36, 40, 41, 0.2);
+  backdrop-filter: blur(1px);
 }
 
 .mobile-nav__drawer {
@@ -195,69 +195,117 @@ button {
   right: 0;
   bottom: 0;
   display: flex;
-  width: min(88vw, 23rem);
+  width: min(80vw, 20rem);
   flex-direction: column;
-  padding: 1.25rem 1.25rem 1.5rem;
-  background: #f4f5f2;
+  padding: 1.1rem 1.15rem 1.25rem;
+  background: rgba(248, 247, 243, 0.97);
   color: #242829;
-  box-shadow: -1.5rem 0 4rem rgba(36, 40, 41, 0.14);
+  box-shadow: -1rem 0 3rem rgba(36, 40, 41, 0.1);
+  backdrop-filter: blur(12px);
 }
 
 .mobile-nav__drawer-head {
   display: flex;
-  min-height: 3.5rem;
+  min-height: 3.25rem;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(36, 40, 41, 0.14);
+  border-bottom: 1px solid rgba(36, 40, 41, 0.08);
 }
 
 .mobile-nav__drawer-head > p {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  color: #242829;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.mobile-nav__drawer-head > p span:last-child {
   color: #347f85;
-  font-size: 0.68rem;
-  font-weight: 680;
+  font-size: 0.6rem;
   letter-spacing: 0.16em;
 }
 
 .mobile-nav__close {
   display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   place-items: center;
-  border: 1px solid rgba(36, 40, 41, 0.24);
+  border: 1px solid rgba(36, 40, 41, 0.2);
   border-radius: 999px;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   line-height: 1;
 }
 
 .mobile-nav__drawer nav {
-  margin-top: 2rem;
+  margin-top: 1.55rem;
 }
 
 .mobile-nav__drawer li {
-  border-bottom: 1px solid rgba(36, 40, 41, 0.14);
+  border-bottom: 1px solid rgba(36, 40, 41, 0.075);
 }
 
 .mobile-nav__drawer li a {
   display: flex;
-  min-height: 4.5rem;
+  min-height: 4.05rem;
   align-items: center;
-  gap: 1.25rem;
-  font-size: 1.35rem;
-  font-weight: 560;
-  letter-spacing: -0.035em;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1.2rem;
+  font-weight: 520;
+  letter-spacing: -0.025em;
 }
 
-.mobile-nav__drawer li a span {
+.mobile-nav__arrow {
+  color: rgba(52, 127, 133, 0.66);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.mobile-nav__brand-note {
+  display: flex;
+  flex: 1;
+  min-height: 11rem;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 1.75rem;
+  padding: 1.15rem;
+  border: 1px solid rgba(52, 127, 133, 0.1);
+  border-radius: 0.85rem;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.5),
+    rgba(228, 236, 232, 0.42) 58%,
+    rgba(229, 215, 195, 0.28)
+  );
+}
+
+.mobile-nav__drawer:focus {
+  outline: none;
+}
+
+.mobile-nav__brand-note p {
   color: #347f85;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
 }
 
-.mobile-nav__tagline {
-  margin-top: auto;
-  color: rgba(36, 40, 41, 0.56);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
+.mobile-nav__brand-note span {
+  display: block;
+  max-width: 14rem;
+  margin-top: 0.75rem;
+  color: rgba(36, 40, 41, 0.6);
+  font-size: 0.72rem;
+  line-height: 1.75;
+}
+
+.mobile-nav__brand-note small {
+  color: rgba(36, 40, 41, 0.38);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
 }
 
 .mobile-nav__trigger:focus-visible,

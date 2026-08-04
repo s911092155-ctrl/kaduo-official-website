@@ -28,8 +28,7 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
     const focusableSelector =
       'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
     const drawer = drawerRef.current;
-    const focusable = drawer?.querySelectorAll<HTMLElement>(focusableSelector);
-    focusable?.[0]?.focus();
+    drawer?.focus();
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -48,7 +47,10 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
 
       if (!first || !last) return;
 
-      if (event.shiftKey && document.activeElement === first) {
+      if (document.activeElement === drawer) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
       } else if (!event.shiftKey && document.activeElement === last) {
@@ -96,6 +98,7 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
                     animate={{ opacity: 1 }}
                     exit={shouldReduceMotion ? undefined : { opacity: 0 }}
                     onClick={() => setIsOpen(false)}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.24 }}
                   />
                   <motion.div
                     ref={drawerRef}
@@ -107,13 +110,17 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
                     animate={{ x: 0 }}
                     exit={shouldReduceMotion ? undefined : { x: "100%" }}
                     role="dialog"
+                    tabIndex={-1}
                     transition={{
-                      duration: shouldReduceMotion ? 0 : 0.32,
+                      duration: shouldReduceMotion ? 0 : 0.26,
                       ease: [0.22, 1, 0.36, 1],
                     }}
                   >
                     <div className="mobile-nav__drawer-head">
-                      <p id={titleId}>导航</p>
+                      <p id={titleId}>
+                        <span>凯朵</span>
+                        <span>KADUO</span>
+                      </p>
                       <button
                         aria-label="关闭菜单"
                         className="mobile-nav__close"
@@ -125,17 +132,23 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
                     </div>
                     <nav aria-label="手机端主导航">
                       <ul>
-                        {items.map((item, index) => (
+                        {items.map((item) => (
                           <li key={item.href}>
                             <Link href={item.href} onClick={() => setIsOpen(false)}>
-                              <span>{String(index + 1).padStart(2, "0")}</span>
                               {item.label}
+                              <span aria-hidden="true" className="mobile-nav__arrow">↗</span>
                             </Link>
                           </li>
                         ))}
                       </ul>
                     </nav>
-                    <p className="mobile-nav__tagline">猫与家的共同风景</p>
+                    <div className="mobile-nav__brand-note">
+                      <div>
+                        <p>猫与家的共同风景</p>
+                        <span>让透明宠物家具自然进入现代家居，也让猫的陪伴留在日常里。</span>
+                      </div>
+                      <small>KADUO / PET FURNITURE</small>
+                    </div>
                   </motion.div>
                 </div>
               ) : null}
