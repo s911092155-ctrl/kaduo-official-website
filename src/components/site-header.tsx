@@ -16,10 +16,10 @@ export function SiteHeader() {
         <Link
           className="site-brand flex shrink-0 items-baseline gap-2 font-semibold"
           href="/"
-          aria-label="凯朵 KADUO 首页"
+          aria-label="凯朵 CATDOW 首页"
         >
           <span className="text-lg">凯朵</span>
-          <span className="text-xs">KADUO</span>
+          <span className="text-xs">CATDOW</span>
         </Link>
         <nav aria-label="主导航" className="hidden md:block">
           <ul className="flex items-center gap-8 text-xs">

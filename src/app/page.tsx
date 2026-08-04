@@ -10,7 +10,9 @@ import {
 import { homepageImages } from "@/config/homepage-images";
 import { products } from "@/data/products";
 
-const featuredProduct = products.find((product) => product.id === "cactus-cat-tree");
+const featuredProduct = products.find(
+  (product) => product.id === "cactus-haven-acrylic-cat-tree",
+);
 
 const productStory: ProductStoryItem[] = [
   {
@@ -60,7 +62,7 @@ export default function Home() {
           note={homepageImages.hero.notice}
           src={homepageImages.hero.src}
         >
-          <p className="warm-eyebrow">KADUO / 猫与家的共同风景</p>
+          <p className="warm-eyebrow">CATDOW / 猫与家的共同风景</p>
           <h1>让猫的领地，<br />成为家的风景。</h1>
           <p className="warm-hero__summary">
             将猫真实的生活方式，放进现代家居的尺度里。透明家具留住光，也让陪伴自然发生。
@@ -90,7 +92,7 @@ export default function Home() {
 
           <div className="warm-product-grid">
             <RevealOnScroll className="warm-product-card" distance={20}>
-              <Link href="/products" aria-label="查看仙人掌猫爬架产品资料">
+              <Link href="/products" aria-label="查看仙人掌乐园亚克力猫爬架产品资料">
                 <figure>
                   <Image
                     alt={homepageImages.productSeries.alt}
@@ -105,7 +107,7 @@ export default function Home() {
                     <p>{featuredProduct?.name ?? "产品资料整理中"}</p>
                     <span>
                       {featuredProduct?.summary ?? "产品资料整理中，暂不对外发布。"}
-                      当前概念图不代表仙人掌猫爬架的真实产品结构。
+                      当前首页概念图不代表仙人掌乐园亚克力猫爬架的真实产品结构。
                     </span>
                   </div>
                   <span>草稿资料 ↗</span>
@@ -195,7 +197,7 @@ export default function Home() {
               src={homepageImages.sharedSpace.src}
             />
             <div>
-              <p>HOME / CAT / KADUO</p>
+              <p>HOME / CAT / CATDOW</p>
               <span>真实产品照片到位后，可直接替换当前场景图。</span>
             </div>
           </RevealOnScroll>
@@ -203,7 +205,7 @@ export default function Home() {
 
         <section className="warm-closing warm-shell">
           <RevealOnScroll>
-            <p className="warm-eyebrow">KADUO / 让陪伴留在风景里</p>
+            <p className="warm-eyebrow">CATDOW / 让陪伴留在风景里</p>
             <h2>从猫的日常出发，<br />回到家的日常。</h2>
             <Link className="warm-button warm-button--primary" href="/brand">
               了解凯朵 <span aria-hidden="true">↗</span>

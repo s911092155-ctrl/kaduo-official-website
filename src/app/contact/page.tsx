@@ -3,7 +3,7 @@ import { PageHero } from "@/components/page-hero";
 
 export const metadata: Metadata = {
   title: "联系咨询",
-  description: "联系凯朵 KADUO。正式联系方式将在确认后公布。",
+  description: "联系凯朵 CATDOW。正式联系方式将在确认后公布。",
 };
 
 export default function ContactPage() {

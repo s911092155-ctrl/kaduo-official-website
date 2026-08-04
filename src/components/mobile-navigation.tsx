@@ -119,7 +119,7 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
                     <div className="mobile-nav__drawer-head">
                       <p id={titleId}>
                         <span>凯朵</span>
-                        <span>KADUO</span>
+                        <span>CATDOW</span>
                       </p>
                       <button
                         aria-label="关闭菜单"
@@ -147,7 +147,7 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
                         <p>猫与家的共同风景</p>
                         <span>让透明宠物家具自然进入现代家居，也让猫的陪伴留在日常里。</span>
                       </div>
-                      <small>KADUO / PET FURNITURE</small>
+                      <small>CATDOW / PET FURNITURE</small>
                     </div>
                   </motion.div>
                 </div>
