@@ -86,7 +86,9 @@ images: {
 
 更详细的目录示例见 `public/images/README.md`。
 
-首页当前使用的亚克力家具图片是视觉方向示意，不代表真实产品。收到正式主图、空间场景图和材质细节图后，按 `public/images/README.md` 的说明替换即可。
+首页当前使用的亚克力家具图片是视觉方向示意，不代表真实产品，也不代表“仙人掌猫爬架”的真实结构。首页图片分别放在 `public/images/homepage/` 与 `public/images/cats/`，路径和替代文字集中维护在 `src/config/homepage-images.ts`。
+
+收到正式照片后，优先使用相同文件名覆盖对应图片，这样不需要改页面布局。如果文件名必须变化，只需要修改 `src/config/homepage-images.ts`。替换后请分别检查电脑端和手机端，确认产品与猫没有被裁切或被文字遮挡。更详细的目录说明见 `public/images/README.md`。
 
 ## 如何检查网站
 

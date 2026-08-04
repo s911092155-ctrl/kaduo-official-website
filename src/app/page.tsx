@@ -7,6 +7,7 @@ import {
   StickyProductStory,
   type ProductStoryItem,
 } from "@/components/motion/sticky-product-story";
+import { homepageImages } from "@/config/homepage-images";
 import { products } from "@/data/products";
 
 const featuredProduct = products.find((product) => product.id === "cactus-cat-tree");
@@ -17,32 +18,36 @@ const productStory: ProductStoryItem[] = [
     title: "在家里，它先是一件家具。",
     description:
       "透明结构让产品进入客厅时保持轻盈。具体比例、尺寸与承重信息将在产品资料确认后发布。",
-    image: "/images/home/warm-hero-living-room.png",
-    alt: "明亮客厅中的透明宠物家具与猫咪视觉示意",
+    image: homepageImages.hero.src,
+    alt: homepageImages.hero.alt,
+    notice: homepageImages.hero.notice,
   },
   {
     eyebrow: "02 / 猫咪功能",
     title: "猫可以停留，观察，也可以安心休息。",
     description:
       "功能从猫真实的日常动作出发。当前画面用于确认猫与家具、人与空间之间的关系，不代替功能参数。",
-    image: "/images/home/cat-family-living-room.png",
-    alt: "猫咪在透明家具旁休息的温暖家居视觉示意",
+    image: homepageImages.catFamily.src,
+    alt: homepageImages.catFamily.alt,
+    notice: homepageImages.catFamily.notice,
   },
   {
     eyebrow: "03 / 模块系统",
     title: "把活动路径，整理成家的秩序。",
     description:
       "模块或配件将由产品数据独立维护。未经确认的组合方式和数量不会提前写入页面。",
-    image: "/images/home/warm-hero-living-room.png",
-    alt: "透明宠物家具在现代住宅中的空间视觉示意",
+    image: homepageImages.sharedSpace.src,
+    alt: homepageImages.sharedSpace.alt,
+    notice: homepageImages.sharedSpace.notice,
   },
   {
     eyebrow: "04 / 材质细节",
     title: "透明，不等于没有细节。",
     description:
       "边缘、连接与光线共同影响产品在家中的质感。正式材质说明将以确认后的产品资料为准。",
-    image: "/images/home/acrylic-warm-detail.png",
-    alt: "自然光下的透明亚克力边缘和连接细节视觉示意",
+    image: homepageImages.materialDetail.src,
+    alt: homepageImages.materialDetail.alt,
+    notice: homepageImages.materialDetail.notice,
   },
 ];
 
@@ -51,9 +56,9 @@ export default function Home() {
     <MotionProvider>
       <div className="home-warm">
         <HeroParallax
-          alt="明亮现代客厅中的透明宠物家具与猫咪视觉示意"
-          note="家居与产品视觉示意 / 实物图片待替换"
-          src="/images/home/warm-hero-living-room.png"
+          alt={homepageImages.hero.alt}
+          note={homepageImages.hero.notice}
+          src={homepageImages.hero.src}
         >
           <p className="warm-eyebrow">KADUO / 猫与家的共同风景</p>
           <h1>让猫的领地，<br />成为家的风景。</h1>
@@ -88,17 +93,20 @@ export default function Home() {
               <Link href="/products" aria-label="查看仙人掌猫爬架产品资料">
                 <figure>
                   <Image
-                    alt="仙人掌猫爬架家居场景视觉示意"
+                    alt={homepageImages.productSeries.alt}
                     fill
                     sizes="(min-width: 900px) 72vw, 100vw"
-                    src="/images/home/warm-hero-living-room.png"
+                    src={homepageImages.productSeries.src}
                   />
-                  <figcaption>视觉示意 / 实物图片待替换</figcaption>
+                  <figcaption>{homepageImages.productSeries.notice}</figcaption>
                 </figure>
                 <div className="warm-product-card__meta">
                   <div>
                     <p>{featuredProduct?.name ?? "产品资料整理中"}</p>
-                    <span>{featuredProduct?.summary ?? "产品资料整理中，暂不对外发布。"}</span>
+                    <span>
+                      {featuredProduct?.summary ?? "产品资料整理中，暂不对外发布。"}
+                      当前概念图不代表仙人掌猫爬架的真实产品结构。
+                    </span>
                   </div>
                   <span>草稿资料 ↗</span>
                 </div>
@@ -122,12 +130,12 @@ export default function Home() {
         <section className="cat-family warm-shell">
           <RevealOnScroll className="cat-family__image" distance={28}>
             <Image
-              alt="猫咪在明亮客厅中陪伴家人生活的视觉示意"
+              alt={homepageImages.catFamily.alt}
               fill
               sizes="(min-width: 900px) 68vw, 100vw"
-              src="/images/home/cat-family-living-room.png"
+              src={homepageImages.catFamily.src}
             />
-            <p>生活场景视觉示意 / 非实际产品图</p>
+            <p>{homepageImages.catFamily.notice}</p>
           </RevealOnScroll>
           <div className="cat-family__copy">
             <RevealOnScroll>
@@ -164,12 +172,12 @@ export default function Home() {
               scaleFrom={0.965}
             >
               <Image
-                alt="暖色自然光中的透明亚克力边缘与连接细节视觉示意"
+                alt={homepageImages.materialDetail.alt}
                 fill
                 sizes="(min-width: 900px) 54vw, 100vw"
-                src="/images/home/acrylic-warm-detail.png"
+                src={homepageImages.materialDetail.src}
               />
-              <span>材质视觉示意 / 参数待确认</span>
+              <span>{homepageImages.materialDetail.notice}</span>
             </RevealOnScroll>
           </div>
         </section>
@@ -181,10 +189,10 @@ export default function Home() {
           </RevealOnScroll>
           <RevealOnScroll className="shared-space__image" delay={0.08}>
             <Image
-              alt="透明宠物家具、猫与现代客厅共同生活的视觉示意"
+              alt={homepageImages.sharedSpace.alt}
               fill
               sizes="100vw"
-              src="/images/home/warm-hero-living-room.png"
+              src={homepageImages.sharedSpace.src}
             />
             <div>
               <p>HOME / CAT / KADUO</p>

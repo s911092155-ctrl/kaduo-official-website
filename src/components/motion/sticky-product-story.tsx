@@ -15,6 +15,7 @@ export type ProductStoryItem = {
   description: string;
   eyebrow: string;
   image: string;
+  notice: string;
   title: string;
 };
 
@@ -67,7 +68,7 @@ export function StickyProductStory({ items }: { items: ProductStoryItem[] }) {
               sizes="(min-width: 900px) 56vw, 100vw"
               src={activeItem.image}
             />
-            <figcaption>视觉示意 / 实物图片待替换</figcaption>
+            <figcaption>{activeItem.notice}</figcaption>
           </motion.figure>
         </AnimatePresence>
       </div>

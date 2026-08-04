@@ -15,19 +15,30 @@ public/images/products/cactus-cat-tree/
 
 ## 首页视觉示意
 
-`public/images/home/` 保存当前暖调首页审核使用的三张视觉示意，不代表真实产品：
+首页图片按用途分在三个目录：
 
-- `warm-hero-living-room.png`：明亮客厅、透明家具与猫咪首屏
-- `cat-family-living-room.png`：猫与家的情感章节
-- `acrylic-warm-detail.png`：自然光下的亚克力材质细节
+```text
+public/images/
+├── homepage/  # 首屏、材质与共居空间
+├── cats/      # 猫与家的生活照片
+└── products/  # 正式产品主图、场景图和细节图
+```
 
-正式照片到位后，使用相同文件名替换最省事，也可以在 `src/app/page.tsx` 更新路径。建议保持接近 3:2 的横向比例，避免影响现有裁切。
+当前首页使用的图片包括：
+
+- `homepage/hero-living-room.png`：明亮客厅、透明家具与猫咪首屏
+- `homepage/acrylic-material-detail.png`：自然光下的亚克力材质细节
+- `cats/cat-family-living-room.png`：猫与家的情感章节
+
+所有首页图片路径、替代文字和视觉示意标记集中在 `src/config/homepage-images.ts`。正式照片到位后，直接替换同名文件即可，不需要修改页面布局。若文件名发生变化，只修改这个配置文件，不要在 `src/app/page.tsx` 分散填写路径。
+
+建议继续使用接近 3:2 的横向图片。正式照片替换前，请确认电脑端和手机端裁切都能完整看见产品与猫。
+
+当前概念图只用于确认家居氛围和页面构图，不代表“仙人掌猫爬架”的真实产品结构。
 
 ## 早期方向存档
 
-`public/images/concepts/` 中的两张图片仅用于审核首页的空间、材质和版式方向，不代表真实产品：
+`public/images/homepage/` 中以 `archive-dark-` 开头的两张图片仅用于追溯早期视觉方向，不代表真实产品：首页不会调用它们。
 
-- `acrylic-cat-furniture-concept.png`：首页主图与空间场景图
-- `acrylic-material-detail.png`：亚克力材质细节图
-
-这组图片已经不再由首页调用，保留在仓库中仅用于追溯早期视觉方向。
+- `archive-dark-concept.png`
+- `archive-dark-material.png`
