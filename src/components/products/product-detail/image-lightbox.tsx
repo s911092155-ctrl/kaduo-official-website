@@ -14,13 +14,14 @@ type ImageLightboxProps = {
   gallery?: LightboxItem[];
   image: ProductImage;
   label: string;
+  labels: {open:string; previous:string; next:string; zoomOut:string; zoomIn:string; close:string; canvas:string; keyboardHint:string};
 };
 
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.25;
 
-export function ImageLightbox({ gallery, image, label }: ImageLightboxProps) {
+export function ImageLightbox({ gallery, image, label, labels }: ImageLightboxProps) {
   const items = gallery?.length ? gallery : [{ image, label }];
   const initialIndex = Math.max(
     0,
@@ -191,7 +192,7 @@ export function ImageLightbox({ gallery, image, label }: ImageLightboxProps) {
           {label}
           <span aria-hidden="true" className="product-detail-action-arrow text-[var(--moss)]">↗</span>
         </span>
-        <span className="mt-1 block text-xs text-[#727a77]">点击查看设计图</span>
+        <span className="mt-1 block text-xs text-[#727a77]">{labels.open}</span>
       </button>
 
       <dialog
@@ -211,19 +212,19 @@ export function ImageLightbox({ gallery, image, label }: ImageLightboxProps) {
               {items.length > 1 ? (
                 <p aria-live="polite" className="mt-0.5 text-[0.65rem] text-[#727a77]">
                   {activeIndex + 1} / {items.length}
-                  <span className="hidden sm:inline"> · 使用左右方向键切换</span>
+                  <span className="hidden sm:inline"> · {labels.keyboardHint}</span>
                 </p>
               ) : null}
             </div>
             <div className="flex shrink-0 items-center justify-between gap-1.5 sm:justify-start">
               {items.length > 1 ? (
                 <>
-                  <button aria-label="上一张设计图" className="product-detail-lightbox-tool" onClick={showPrevious} type="button">←</button>
-                  <button aria-label="下一张设计图" className="product-detail-lightbox-tool" onClick={showNext} type="button">→</button>
+                  <button aria-label={labels.previous} className="product-detail-lightbox-tool" onClick={showPrevious} type="button">←</button>
+                  <button aria-label={labels.next} className="product-detail-lightbox-tool" onClick={showNext} type="button">→</button>
                 </>
               ) : null}
               <button
-                aria-label="缩小设计图"
+                aria-label={labels.zoomOut}
                 className="product-detail-lightbox-tool"
                 disabled={zoom <= MIN_ZOOM}
                 onClick={() => setZoom((current) => Math.max(MIN_ZOOM, current - ZOOM_STEP))}
@@ -233,7 +234,7 @@ export function ImageLightbox({ gallery, image, label }: ImageLightboxProps) {
               </button>
               <span className="min-w-10 text-center text-[0.65rem] tabular-nums text-[#596461]">{Math.round(zoom * 100)}%</span>
               <button
-                aria-label="放大设计图"
+                aria-label={labels.zoomIn}
                 className="product-detail-lightbox-tool"
                 disabled={zoom >= MAX_ZOOM}
                 onClick={() => setZoom((current) => Math.min(MAX_ZOOM, current + ZOOM_STEP))}
@@ -242,7 +243,7 @@ export function ImageLightbox({ gallery, image, label }: ImageLightboxProps) {
                 +
               </button>
               <button
-                aria-label="关闭设计图"
+                aria-label={labels.close}
                 className="product-detail-lightbox-close grid size-10 shrink-0 place-items-center rounded-full text-xl outline-none hover:border-black/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--moss)]"
                 onClick={closeDialog}
                 ref={closeRef}
@@ -253,7 +254,7 @@ export function ImageLightbox({ gallery, image, label }: ImageLightboxProps) {
             </div>
           </div>
           <div
-            aria-label="可放大并拖动的设计图"
+            aria-label={labels.canvas}
             className="product-detail-lightbox-canvas relative h-[min(74vh,48rem)] w-full touch-none overflow-hidden bg-white"
             data-dragging="false"
             onPointerCancel={handlePointerUp}

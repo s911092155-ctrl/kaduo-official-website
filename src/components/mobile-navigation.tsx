@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import {useTranslations} from "next-intl";
+import { Suspense, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import {LanguageSwitcher} from "@/components/language-switcher";
+import {Link} from "@/i18n/navigation";
 
 type NavigationItem = {
   href: string;
@@ -11,6 +13,7 @@ type NavigationItem = {
 };
 
 export function MobileNavigation({ items }: { items: NavigationItem[] }) {
+  const t = useTranslations("Header");
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -69,7 +72,7 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
   }, [isOpen]);
 
   return (
-    <div className="mobile-nav md:hidden">
+    <div className="mobile-nav lg:hidden">
       <button
         ref={buttonRef}
         aria-controls={drawerId}
@@ -79,7 +82,7 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
         onClick={() => setIsOpen(true)}
         type="button"
       >
-        <span>菜单</span>
+        <span>{t("menu")}</span>
         <span aria-hidden="true" className="mobile-nav__trigger-icon">
           <i />
           <i />
@@ -118,11 +121,11 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
                   >
                     <div className="mobile-nav__drawer-head">
                       <p id={titleId}>
-                        <span>凯朵</span>
+                        <span>{t("brand")}</span>
                         <span>CATDOW</span>
                       </p>
                       <button
-                        aria-label="关闭菜单"
+                        aria-label={t("closeMenu")}
                         className="mobile-nav__close"
                         onClick={() => setIsOpen(false)}
                         type="button"
@@ -130,7 +133,7 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
                         <span aria-hidden="true">×</span>
                       </button>
                     </div>
-                    <nav aria-label="手机端主导航">
+                    <nav aria-label={t("mobileNavigationLabel")}>
                       <ul>
                         {items.map((item) => (
                           <li key={item.href}>
@@ -144,11 +147,12 @@ export function MobileNavigation({ items }: { items: NavigationItem[] }) {
                     </nav>
                     <div className="mobile-nav__brand-note">
                       <div>
-                        <p>猫与家的共同风景</p>
-                        <span>让透明宠物家具自然进入现代家居，也让猫的陪伴留在日常里。</span>
+                        <p>{t("brandNoteTitle")}</p>
+                        <span>{t("brandNote")}</span>
                       </div>
                       <small>CATDOW / PET FURNITURE</small>
                     </div>
+                    <Suspense fallback={null}><LanguageSwitcher variant="mobile" /></Suspense>
                   </motion.div>
                 </div>
               ) : null}

@@ -1,0 +1,53 @@
+{
+  "Metadata": {
+    "siteTitle": "凱朵 CATDOW｜高端寵物傢俱與人寵共居美學",
+    "siteDescription": "凱朵 CATDOW 是關注貓咪真實需求與居住空間關係的高端寵物傢俱品牌。",
+    "homeTitle": "凱朵 CATDOW｜讓貓的領地，成為家的風景。",
+    "productsTitle": "產品中心｜凱朵 CATDOW",
+    "productsDescription": "瀏覽凱朵 CATDOW 已公開的寵物傢俱產品。",
+    "brandTitle": "品牌故事｜凱朵 CATDOW",
+    "brandDescription": "瞭解凱朵 CATDOW 對人寵共居生活的思考。",
+    "designTitle": "設計理念｜凱朵 CATDOW",
+    "designDescription": "凱朵 CATDOW 的人寵共居設計原則。",
+    "contactTitle": "聯絡諮詢｜凱朵 CATDOW",
+    "contactDescription": "聯絡凱朵 CATDOW。正式聯絡方式確認後將公布於此。"
+  },
+  "Header": {
+    "brand": "凱朵",
+    "brandFull": "凱朵 CATDOW",
+    "homeLabel": "凱朵 CATDOW 首頁",
+    "navigationLabel": "主選單",
+    "mobileNavigationLabel": "行動版主選單",
+    "products": "產品中心",
+    "brandStory": "品牌故事",
+    "design": "設計理念",
+    "contact": "聯絡諮詢",
+    "menu": "選單",
+    "closeMenu": "關閉選單",
+    "brandNoteTitle": "貓與家的共同風景",
+    "brandNote": "讓透明寵物傢俱自然融入現代居家，也讓貓咪的陪伴留在日常裡。"
+  },
+  "Language": {"label":"語言 / Language","switcherLabel":"選擇網站語言","current":"目前語言","zh-CN":"简体中文","zh-TW":"繁體中文","en":"English"},
+  "Footer": {"brand":"凱朵 CATDOW","positioning":"高端寵物傢俱 / 壓克力空間設計","copyright":"CATDOW. 網站內容持續完善中。","navigationLabel":"頁尾選單"},
+  "Home": {
+    "heroEyebrow":"CATDOW / 貓與家的共同風景","heroTitle":"讓貓的領地，\n成為家的風景。","heroSummary":"把貓咪真實的生活方式，放進現代居家的尺度裡。透明傢俱留住光，也讓陪伴自然發生。","exploreProducts":"探索產品","aboutCatdow":"瞭解凱朵",
+    "seriesEyebrow":"01 / 產品系列","seriesTitle":"為貓設計，\n也為家選擇。","seriesIntro":"產品資料可持續擴充。每件產品都有名稱、簡介、設計理念、功能、材質、尺寸與圖片等獨立欄位。","productPreparing":"產品資料整理中","productPreparingSummary":"產品資料整理中，暫不對外發布。","conceptDisclaimer":"目前首頁概念圖不代表仙人掌樂園壓克力貓爬架的實際產品結構。","draftInfo":"草稿資料",
+    "storyEyebrow":"02 / 旗艦產品敘事","storyTitle":"從一件傢俱，\n看見貓在家的每一天。","storyIntro":"向下捲動，依序查看整體設計、貓咪功能、模組系統與材質細節。",
+    "storyItems":[{"eyebrow":"01 / 整體設計","title":"在家裡，它首先是一件傢俱。","description":"透明結構讓產品進入客廳時仍保有輕盈感。具體比例、尺寸與承重資訊將於產品資料確認後發布。"},{"eyebrow":"02 / 貓咪功能","title":"貓可以停留、觀察，也可以安心休息。","description":"功能從貓咪真實的日常動作出發。目前畫面用於確認貓與傢俱、主人與空間之間的關係，不取代功能參數。"},{"eyebrow":"03 / 模組系統","title":"把活動路徑，整理成家的秩序。","description":"模組或配件由產品資料獨立維護。未經確認的組合方式與數量不會提前公開。"},{"eyebrow":"04 / 材質細節","title":"透明，不代表沒有細節。","description":"邊緣、連接與光線共同影響產品在家中的質感。正式材質說明以確認後的產品資料為準。"}],
+    "catEyebrow":"03 / 貓與家","catWord":"一起生活","catTitle":"貓不是寵物用品的使用者。\n牠是住在這裡的家人。","catBody":"因此，我們關心的不只是貓能不能使用，也關心一件傢俱如何進入共同的客廳、光線與日常。",
+    "materialEyebrow":"04 / 材質與設計","materialTitle":"讓透明，\n經得起近看。","materialBody":"透明材質會放大邊緣、連接與環境光。頁面先呈現設計關注點，具體材質與結構參數仍待產品資料確認。","materialPoints":[{"term":"邊緣","detail":"觀察觸感與光線表現"},{"term":"連接","detail":"整理結構與視覺關係"},{"term":"模組","detail":"為後續產品延伸保留位置"}],
+    "spaceEyebrow":"05 / 共居空間","spaceTitle":"它屬於貓，\n也自然屬於這個家。","spaceNote":"真實產品照片完成後，可直接替換目前的情境圖。","closingEyebrow":"CATDOW / 讓陪伴留在風景裡","closingTitle":"從貓的日常出發，\n回到家的日常。",
+    "imageNotice":"居家與產品視覺示意 / 實品圖待替換","catImageNotice":"貓與家生活情境示意 / 實品圖待替換","materialImageNotice":"材質視覺示意 / 實品圖待替換",
+    "imageAlts":{"hero":"明亮現代客廳中的透明寵物傢俱、自然光與貓咪視覺示意","productSeries":"透明寵物傢俱融入明亮客廳的居家情境示意","catFamily":"貓咪在明亮客廳的透明傢俱旁休息，呈現貓與家的生活關係","materialDetail":"暖色自然光中的透明壓克力邊緣與連接細節示意","sharedSpace":"透明寵物傢俱、貓咪與現代客廳共同構成的共居空間示意"}
+  },
+  "Products": {"eyebrow":"CATDOW PRODUCTS","title":"產品\n中心","lead":"為貓咪的真實生活設計，也讓透明、光影與結構自然融入現代居家。","note":"公開列表只展示資料已確認並完成發布的產品。草稿、封存與開發示範資料不會出現在正式網站。","emptyEyebrow":"NO PUBLISHED PRODUCTS","emptyTitle":"目前沒有已發布產品","emptyBody":"這是開發階段的空白狀態。產品資料確認後，維護者可在產品資料檔中將對應項目設為已發布。","developmentEyebrow":"DEVELOPMENT PREVIEW","collectionEyebrow":"PRODUCT COLLECTION","developmentTitle":"開發環境版面檢查","publishedTitle":"已發布產品","developmentNote":"以下資料只會在本機開發模式顯示，用於檢查頁面版面，不代表正式產品。","viewDetails":"查看詳情","draftPreview":"草稿預覽","developmentOnly":"開發示範","imageMissing":"產品圖片尚未設定","detailsAria":"查看產品詳情："},
+  "ProductDetail": {
+    "developmentPreview":"開發示範 · 非正式產品","products":"產品中心","mainImageMissing":"產品主圖尚未設定","coreExperienceTitle":"貓咪的四種核心體驗","coreExperienceNames":["分層攀爬","多種休憩","躲藏觀察","抓撓互動"],"moduleExplorerBody":"從高處瞭望到低處安睡，四個重點模組對應貓咪不同的停留方式。","galleryTitle":"貓與透明傢俱的生活情境","displayNoticeLabel":"圖片展示說明","previousNextLabel":"上一款與下一款產品",
+    "draftPreview":"草稿預覽","consult":"預約產品諮詢","designConcept":"設計理念","coreExperience":"核心體驗","coreExperienceIntro":"從貓咪在家中的真實動作出發，收斂成四種日常體驗。","moduleExplorer":"模組探索","moduleExplorerIntro":"先從四個核心休憩模組理解產品，再依需求展開完整設計系統。","allModules":"查看全部設計模組","collapseModules":"收合其他設計模組","designDetails":"設計細節","materials":"材質與結構","dimensions":"產品尺寸","drawingOpen":"點擊查看設計圖","overallDrawing":"整體尺寸圖","moduleDrawing":"模組系統圖","assemblyDrawing":"組裝步驟設計圖","prototype":"打樣與組裝驗證","prototypeMore":"查看更多打樣資料","prototypeLess":"收合打樣資料","gallery":"視覺畫廊","standardExclusions":"標準配置說明","notIncluded":"圖片展示中明確不包含","previous":"上一款","next":"下一款","midConsult":"預約諮詢",
+    "imageTypes":{"ai-render":"AI 效果示意","prototype-photo":"打樣實拍","design-drawing":"設計圖"},"materialsTabs":{"acrylic":"高透壓克力","wood":"木質平台","connection":"模組連接"},"lightbox":{"previous":"上一張設計圖","next":"下一張設計圖","zoomOut":"縮小設計圖","zoomIn":"放大設計圖","close":"關閉設計圖","canvas":"可放大並拖曳的設計圖","keyboardHint":"使用左右方向鍵切換"}
+  },
+  "BrandPage": {"eyebrow":"OUR STORY","title":"品牌故事","description":"凱朵從一個具體問題開始：寵物進入家庭之後，牠們需要的物件，能不能不打斷家的秩序與美感？","sectionEyebrow":"WHY CATDOW","paragraphs":["人與寵物共享的不只是空間，也是每天經過的路徑、停留的角落，以及彼此陪伴的時間。我們希望從這些真實情境出發，重新理解寵物傢俱應該如何被設計。","凱朵仍處於品牌建立的早期階段。我們不急著用未經確認的數字或標籤定義自己，而是先把產品資料、設計方法與資訊標準建立清楚。","這個網站是起點。隨著產品完成驗證，公開內容會逐步補充；任何材質、尺寸與功能說明，都以最終確認資料為準。"],"statement":"家不是人的布景，也不是寵物的容器。","statementBody":"它是一段共同生活。凱朵想做的，是把兩種尺度放進同一張設計圖裡。"},
+  "DesignPage": {"eyebrow":"DESIGN PHILOSOPHY","title":"設計理念","description":"我們把寵物的行為尺度、人的使用習慣與家的空間關係放在一起思考。功能清楚、表達克制，資訊也經得起核對。","methods":[{"title":"先看生活，再畫物件","text":"從寵物與人的日常路徑、停留位置與互動方式出發，再判斷產品應該承擔哪些功能。"},{"title":"同時處理兩種尺度","text":"寵物在意攀爬、停靠與安全感，人則需要考量清潔、動線與空間關係。設計必須讓兩邊都成立。"},{"title":"結構應該容易理解","text":"模組、配件與維護方式會在產品資料中清楚記錄。無法確認的內容不會提前出現在公開頁面。"},{"title":"視覺表達保持克制","text":"輪廓、色彩與材質需要進入真實居住環境，而不只是在單張產品圖裡好看。"}]},
+  "ContactPage": {"eyebrow":"CONTACT","title":"聯絡諮詢","description":"歡迎就產品、空間合作或品牌事務與凱朵聯絡。目前版本尚未串接線上表單，正式聯絡方式確認後會更新於此。","detailsEyebrow":"CONTACT DETAILS","detailsTitle":"聯絡方式待補充","detailsBody":"為避免誤導，這裡沒有使用臨時電子郵件、電話或辦公地址。網站上線前，請將已確認的聯絡方式補充至本頁。","beforeEyebrow":"BEFORE PUBLISHING","beforeTitle":"上線前需要確認","items":["對外聯絡信箱","客服電話或企業微信","辦公地址（如需公開）","諮詢資訊的處理方式"]},
+  "NotFound": {"eyebrow":"PAGE NOT FOUND","title":"找不到這個頁面","body":"連結可能有誤，或頁面尚未公開。","backHome":"返回首頁","productEyebrow":"PRODUCT NOT FOUND","productTitle":"找不到這項產品","productBody":"這項產品可能尚未發布、已封存，或連結地址有誤。","backProducts":"返回產品中心"}
+}

@@ -15,6 +15,7 @@ type ModuleExplorerProps = {
   overviewImage: ProductImage;
   remaining: ProductModule[];
   note: string | null;
+  labels: {all: string; collapse: string; group?: string};
 };
 
 const hotspotPositions = [
@@ -29,6 +30,7 @@ export function ModuleExplorer({
   overviewImage,
   remaining,
   note,
+  labels,
 }: ModuleExplorerProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showAll, setShowAll] = useState(false);
@@ -62,7 +64,7 @@ export function ModuleExplorer({
               sizes="(min-width: 1280px) 700px, 58vw"
               src={overviewImage.src}
             />
-            <div aria-label="产品模块热点" className="absolute inset-0" role="group">
+            <div aria-label={labels.group} className="absolute inset-0" role="group">
               {featured.map((item, index) => {
                 const selected = index === activeIndex;
                 const position = hotspotPositions[index] ?? hotspotPositions[0];
@@ -71,7 +73,7 @@ export function ModuleExplorer({
                   <button
                     aria-controls={detailId}
                     aria-pressed={selected}
-                    aria-label={`查看${item.name}`}
+                    aria-label={item.name}
                     className={`product-module-hotspot product-detail-control ${selected ? "is-active" : ""}`}
                     key={item.name}
                     onClick={() => setActiveIndex(index)}
@@ -154,7 +156,7 @@ export function ModuleExplorer({
       </div>
 
       <div className="lg:hidden">
-        <div aria-label="选择产品模块" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-3 sm:-mx-8 sm:px-8" role="group">
+        <div aria-label={labels.group} className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-3 sm:-mx-8 sm:px-8" role="group">
           {featured.map((item, index) => {
             const selected = index === activeIndex;
 
@@ -217,7 +219,7 @@ export function ModuleExplorer({
             onClick={() => setShowAll((current) => !current)}
             type="button"
           >
-            {showAll ? "收起其他设计模块" : "查看全部设计模块"}
+            {showAll ? labels.collapse : labels.all}
             <span aria-hidden="true" className="product-detail-action-arrow">{showAll ? "−" : "+"}</span>
           </button>
           <AnimatePresence initial={false}>

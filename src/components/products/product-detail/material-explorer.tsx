@@ -12,7 +12,7 @@ export type MaterialExplorerItem = {
   image: ProductImage;
 };
 
-export function MaterialExplorer({ items }: { items: MaterialExplorerItem[] }) {
+export function MaterialExplorer({ items, label }: { items: MaterialExplorerItem[]; label: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = items[activeIndex];
   const panelId = useId();
@@ -48,7 +48,7 @@ export function MaterialExplorer({ items }: { items: MaterialExplorerItem[] }) {
 
   return (
     <div className="mt-8">
-      <div aria-label="材质细节" className="flex gap-2 overflow-x-auto pb-2" role="tablist">
+      <div aria-label={label} className="flex gap-2 overflow-x-auto pb-2" role="tablist">
         {items.map((item, index) => {
           const selected = index === activeIndex;
 
