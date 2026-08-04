@@ -3,7 +3,7 @@ import { PageHero } from "@/components/page-hero";
 
 export const metadata: Metadata = {
   title: "品牌故事",
-  description: "了解凯朵 KADUO 对人宠共居生活的思考。",
+  description: "了解凯朵 CATDOW 对人宠共居生活的思考。",
 };
 
 export default function BrandPage() {
@@ -15,7 +15,7 @@ export default function BrandPage() {
         description="凯朵从一个具体的问题开始：宠物进入家庭之后，它们需要的物品，能不能不打断家的秩序与审美？"
       />
       <section className="page-shell grid gap-12 py-16 sm:py-24 md:grid-cols-[0.7fr_1.3fr]">
-        <p className="eyebrow">WHY KADUO</p>
+        <p className="eyebrow">WHY CATDOW</p>
         <div className="max-w-3xl space-y-7 text-lg leading-9 text-[var(--muted)]">
           <p>
             人与宠物共享的不只是面积，也是每天经过的路径、停留的角落和彼此陪伴的时间。我们希望从这些真实场景出发，重新理解宠物家居应该怎样被设计。

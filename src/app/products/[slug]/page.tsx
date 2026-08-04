@@ -1,7 +1,19 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  ImageLightbox,
+  type LightboxItem,
+} from "@/components/products/product-detail/image-lightbox";
+import {
+  MaterialExplorer,
+  type MaterialExplorerItem,
+} from "@/components/products/product-detail/material-explorer";
+import {
+  ModuleExplorer,
+  type ModuleExplorerItem,
+} from "@/components/products/product-detail/module-explorer";
+import { ProductMedia } from "@/components/products/product-detail/product-media";
 import {
   getVisibleProductBySlug,
   getVisibleProducts,
@@ -12,6 +24,24 @@ import {
 type ProductDetailPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+const coreExperienceTitles = [
+  ["分层垂直攀爬", "分层攀爬"],
+  ["多种休憩空间", "多种休憩"],
+  ["躲藏与观察", "躲藏观察"],
+  ["抓挠与互动", "抓挠互动"],
+] as const;
+
+const featuredModuleNames = [
+  "顶部瞭望猫屋",
+  "悬浮猫兜",
+  "透明中舱猫房",
+  "底层休憩猫窝",
+] as const;
+
+function isRenderableImage(image: ProductImage) {
+  return image.publicApproved !== false;
+}
 
 export function generateStaticParams() {
   return publishedProducts.map((product) => ({ slug: product.slug }));
@@ -28,32 +58,13 @@ export async function generateMetadata({
   }
 
   return {
-    title: product.name,
-    description: product.summary ?? `凯朵 KADUO ${product.name}产品信息。`,
+    title: product.seoTitle ? { absolute: product.seoTitle } : product.name,
+    description:
+      product.seoDescription ??
+      product.summary ??
+      `凯朵 CATDOW ${product.name}产品信息。`,
+    robots: product.status === "published" ? undefined : { index: false, follow: false },
   };
-}
-
-function ProductImageFigure({
-  image,
-  className,
-  priority = false,
-}: {
-  image: ProductImage;
-  className: string;
-  priority?: boolean;
-}) {
-  return (
-    <figure className={`relative overflow-hidden bg-[#e4e9e7] ${className}`}>
-      <Image
-        alt={image.alt}
-        className="object-cover"
-        fill
-        priority={priority}
-        sizes="(min-width: 1024px) 55vw, 100vw"
-        src={image.src}
-      />
-    </figure>
-  );
 }
 
 export default async function ProductDetailPage({
@@ -73,79 +84,166 @@ export default async function ProductDetailPage({
     currentIndex >= 0 && currentIndex < visibleProducts.length - 1
       ? visibleProducts[currentIndex + 1]
       : null;
-  const specifications = [
-    { label: "材质", values: product.materials },
-    {
-      label: "整体尺寸",
-      values: product.overallDimensions ? [product.overallDimensions] : [],
+  const mainImage =
+    product.images.main && isRenderableImage(product.images.main)
+      ? product.images.main
+      : null;
+  const sceneImages = product.images.scenes.filter(isRenderableImage);
+  const detailImages = product.images.details.filter(isRenderableImage);
+  const dimensionImages = product.images.dimensions.filter(isRenderableImage);
+  const drawingImages = product.images.drawings.filter(isRenderableImage);
+  const prototypeImages = product.images.prototypes.filter(isRenderableImage);
+  const isDraftPreview =
+    process.env.NODE_ENV === "development" && product.status !== "published";
+  const designParagraphs = product.designConcept
+    ? product.designConcept.split("\n\n").filter(Boolean)
+    : [];
+  const coreExperiences = coreExperienceTitles.flatMap(
+    ([sourceTitle, displayTitle]) => {
+      const feature = product.features.find((item) => item.title === sourceTitle);
+      return feature ? [{ ...feature, displayTitle }] : [];
     },
-    { label: "重量", values: product.weight ? [product.weight] : [] },
-    {
-      label: "适用猫咪",
-      values: product.suitableCats ? [product.suitableCats] : [],
-    },
-    { label: "产品颜色", values: product.colors.map((color) => color.name) },
-  ].filter((item) => item.values.length > 0);
-  const galleryImages = [
-    ...product.images.details,
-    ...product.images.dimensions,
-    ...product.images.scenes.slice(1),
+  );
+  const moduleImages = [mainImage, detailImages[0], sceneImages[1], detailImages[1]].filter(
+    (image): image is ProductImage => Boolean(image),
+  );
+  const featuredModules = featuredModuleNames.flatMap((name, index) => {
+    const productModule = product.modules.find((item) => item.name === name);
+    const image = productModule?.image && isRenderableImage(productModule.image)
+      ? productModule.image
+      : moduleImages[index];
+
+    return productModule && image
+      ? [{ ...productModule, image } satisfies ModuleExplorerItem]
+      : [];
+  });
+  const remainingModules = product.modules.filter(
+    (module) => !featuredModuleNames.includes(module.name as (typeof featuredModuleNames)[number]),
+  );
+  const conceptImage = sceneImages[0] ?? mainImage;
+  const galleryImages = [mainImage, detailImages[0], detailImages[1], sceneImages[1]].filter(
+    (image): image is ProductImage => Boolean(image),
+  );
+  const prototypePrimaryImages = [prototypeImages[0], drawingImages[1]].filter(
+    (image): image is ProductImage => Boolean(image),
+  );
+  const extraPrototypeImages = [
+    ...prototypeImages.slice(1),
+    ...drawingImages.slice(2),
   ];
+  const designGallery = [
+    dimensionImages[0]
+      ? { image: dimensionImages[0], label: "整体尺寸图" }
+      : null,
+    drawingImages[0]
+      ? { image: drawingImages[0], label: "模块系统图" }
+      : null,
+    drawingImages[1]
+      ? { image: drawingImages[1], label: "组装步骤设计图" }
+      : null,
+  ].filter((item): item is LightboxItem => Boolean(item));
+  const acrylicDescription =
+    product.materials.find((item) => item.includes("高透亚克力")) ??
+    product.materialDescription;
+  const woodDescription = product.materials.find((item) =>
+    item.includes("浅色木质饰面平台"),
+  );
+  const connectionDescription =
+    product.materials.find((item) => item.includes("连接与固定结构")) ??
+    product.features.find((feature) => feature.title === "模块化组合")
+      ?.description;
+  const materialItems = [
+    acrylicDescription && (detailImages[0] ?? mainImage)
+      ? {
+          name: "高透亚克力",
+          description: acrylicDescription,
+          image: detailImages[0] ?? mainImage,
+        }
+      : null,
+    woodDescription && (prototypeImages[0] ?? detailImages[0])
+      ? {
+          name: "木质平台",
+          description: woodDescription,
+          image: prototypeImages[0] ?? detailImages[0],
+        }
+      : null,
+    connectionDescription && (drawingImages[0] ?? detailImages[1])
+      ? {
+          name: "模块连接",
+          description: connectionDescription,
+          image: drawingImages[0] ?? detailImages[1],
+        }
+      : null,
+  ].filter((item): item is MaterialExplorerItem => Boolean(item));
+  const sectionClass =
+    "mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10";
 
   return (
-    <>
-      <div className="border-b border-[var(--line)] bg-[#f7f6f2]">
-        <div className="page-shell flex min-h-14 items-center gap-2 overflow-hidden text-xs text-[var(--muted)]">
-          <Link className="shrink-0 transition-colors hover:text-[var(--ink)]" href="/products">
+    <main className="overflow-clip bg-[#f8f7f3] text-[#202725]">
+      <div className="border-b border-black/10">
+        <div className={`${sectionClass} flex min-h-14 items-center gap-2 overflow-hidden text-xs text-[#747c79]`}>
+          <Link className="shrink-0 transition-colors hover:text-[#202725]" href="/products">
             产品中心
           </Link>
           <span aria-hidden="true">/</span>
-          <span className="truncate text-[var(--ink)]">{product.name}</span>
+          <span className="truncate text-[#35403e]">{product.name}</span>
         </div>
       </div>
 
-      <section className="bg-[#f7f6f2]">
-        <div className="page-shell grid gap-10 py-10 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16 lg:py-20">
+      <section>
+        <div className={`${sectionClass} grid gap-6 pb-14 pt-7 sm:gap-8 sm:pb-20 sm:pt-10 lg:min-h-[760px] lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-16 lg:py-20`}>
           <div className="order-2 lg:order-1">
             <div className="flex flex-wrap items-center gap-3">
-              <p className="eyebrow">{product.series ?? "KADUO PRODUCT"}</p>
+              <p className="text-xs font-medium tracking-[0.18em] text-[var(--moss)]">
+                {product.series ?? "CATDOW PRODUCT"}
+              </p>
+              {isDraftPreview ? (
+                <span className="border border-[color:rgba(8,127,153,0.28)] px-2.5 py-1 text-[0.65rem] font-medium tracking-[0.12em] text-[var(--moss)]">
+                  草稿预览 · 尚未公开
+                </span>
+              ) : null}
               {product.developmentOnly ? (
-                <span className="rounded-full border border-[color:rgba(8,127,153,0.25)] bg-white/55 px-3 py-1 text-[0.65rem] font-medium tracking-[0.14em] text-[var(--moss)]">
+                <span className="border border-black/15 px-2.5 py-1 text-[0.65rem] font-medium tracking-[0.12em] text-[#66706e]">
                   开发演示 · 非正式产品
                 </span>
               ) : null}
             </div>
-            <h1 className="mt-7 max-w-2xl text-[clamp(2.8rem,6.5vw,6rem)] font-medium leading-[0.94] tracking-[-0.065em]">
+            <h1 className="mt-4 max-w-[9em] text-[clamp(2.45rem,5vw,4.8rem)] font-medium leading-[1.05] tracking-[-0.055em] sm:mt-7">
               {product.name}
             </h1>
             {product.englishName ? (
-              <p className="mt-4 text-sm tracking-[0.16em] text-[var(--muted)]">
+              <p className="mt-3 max-w-[34rem] text-xs leading-6 tracking-[0.1em] text-[#6a7471] sm:mt-4 sm:text-sm">
                 {product.englishName}
               </p>
             ) : null}
             {product.summary ? (
-              <p className="mt-8 max-w-xl text-base leading-8 text-[#4f5b5a] sm:text-lg">
+              <p className="mt-4 max-w-[36rem] text-[0.95rem] leading-7 text-[#596461] sm:mt-6 sm:text-lg sm:leading-8">
                 {product.summary}
               </p>
             ) : null}
             {product.inquiryLabel ? (
               <Link
-                className="mt-9 inline-flex min-h-12 items-center justify-center rounded-full bg-[#273130] px-7 text-sm font-medium text-white transition-colors hover:bg-[var(--moss)]"
+                className="product-detail-control group mt-5 inline-flex min-h-12 items-center justify-center gap-3 bg-[#273130] px-7 text-sm font-medium text-white hover:bg-[var(--moss)] sm:mt-7"
                 href="/contact"
               >
                 {product.inquiryLabel}
+                <span aria-hidden="true" className="product-detail-action-arrow">→</span>
               </Link>
             ) : null}
           </div>
+
           <div className="order-1 lg:order-2">
-            {product.images.main ? (
-              <ProductImageFigure
-                className="aspect-[4/3] rounded-[1.5rem] sm:rounded-[2.25rem]"
-                image={product.images.main}
+            {mainImage ? (
+              <ProductMedia
+                frameClassName="aspect-[16/10] sm:aspect-[4/3]"
+                image={mainImage}
+                imageClassName="object-cover"
+                captionOverlay
                 priority
+                sizes="(min-width: 1024px) 62vw, 100vw"
               />
             ) : (
-              <div className="grid aspect-[4/3] place-items-center rounded-[1.5rem] bg-[#e4e9e7] px-8 text-center text-sm text-[var(--muted)] sm:rounded-[2.25rem]">
+              <div className="grid aspect-[4/3] place-items-center bg-[#eceeea] px-8 text-center text-sm text-[#69736f]">
                 产品主图尚未配置
               </div>
             )}
@@ -154,186 +252,351 @@ export default async function ProductDetailPage({
       </section>
 
       {product.designConcept ? (
-        <section className="page-shell grid gap-8 py-16 sm:py-24 lg:grid-cols-[0.65fr_1.35fr] lg:gap-16">
-          <p className="eyebrow">DESIGN CONCEPT</p>
-          <div>
-            <h2 className="text-3xl font-medium tracking-[-0.045em] sm:text-5xl">
-              设计理念
-            </h2>
-            <p className="mt-7 max-w-3xl text-lg leading-9 text-[var(--muted)]">
-              {product.designConcept}
-            </p>
-          </div>
-        </section>
-      ) : null}
-
-      {product.images.scenes.length > 0 ? (
-        <section className="bg-[#e6ebe8] py-16 sm:py-24">
-          <div className="page-shell">
-            <div className="mb-8 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="eyebrow">AT HOME</p>
-                <h2 className="mt-4 text-3xl font-medium tracking-[-0.045em] sm:text-5xl">
-                  家居场景
-                </h2>
+        <section className={`${sectionClass} border-t border-black/10 py-14 sm:py-20 lg:py-28`}>
+          <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-20">
+            {conceptImage ? (
+              <div className="mx-auto w-full max-w-[32rem] lg:mx-0">
+                <ProductMedia
+                  frameClassName="aspect-[3/4]"
+                  image={conceptImage}
+                  imageClassName="object-contain"
+                  sizes="(min-width: 1024px) 42vw, 100vw"
+                />
               </div>
-              {product.developmentOnly ? (
-                <p className="text-xs text-[var(--muted)]">开发演示图 / 不代表正式产品</p>
-              ) : null}
+            ) : null}
+            <div className="max-w-[37rem]">
+              <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
+                DESIGN CONCEPT
+              </p>
+              <h2 className="text-3xl font-medium leading-tight tracking-[-0.045em] sm:mt-4 sm:text-5xl">
+                {product.designConceptTitle ?? "设计理念"}
+              </h2>
+              <div className="mt-7 space-y-5 text-base leading-8 text-[#5f6966] sm:text-lg sm:leading-9">
+                {designParagraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
             </div>
-            <ProductImageFigure
-              className="aspect-[16/9] rounded-[1.5rem] sm:rounded-[2.25rem]"
-              image={product.images.scenes[0]}
-            />
           </div>
         </section>
       ) : null}
 
-      {product.features.length > 0 ? (
-        <section className="page-shell py-16 sm:py-24">
-          <p className="eyebrow">FUNCTION</p>
-          <h2 className="mt-4 text-3xl font-medium tracking-[-0.045em] sm:text-5xl">
-            功能特点
-          </h2>
-          <ol className="mt-10 grid border-t border-[var(--line)] md:grid-cols-2">
-            {product.features.map((feature, index) => (
-              <li
-                className="grid min-h-48 grid-cols-[auto_1fr] gap-5 border-b border-[var(--line)] py-8 md:px-8 md:first:pl-0 md:even:border-l"
-                key={feature}
-              >
-                <span className="text-xs text-[var(--moss)]">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <p className="text-lg leading-8">{feature}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-      ) : null}
-
-      {specifications.length > 0 ? (
-        <section className="border-y border-[var(--line)] bg-[rgba(255,255,255,0.36)]">
-          <div className="page-shell grid gap-10 py-16 sm:py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-            <div>
-              <p className="eyebrow">MATERIAL & SPECIFICATION</p>
-              <h2 className="mt-4 text-3xl font-medium tracking-[-0.045em] sm:text-5xl">
-                材质与信息
+      {coreExperiences.length > 0 ? (
+        <section className="bg-[#e9efea] py-14 sm:py-20 lg:py-24">
+          <div className={sectionClass}>
+            <div className="max-w-[38rem]">
+              <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
+                CORE EXPERIENCE
+              </p>
+              <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
+                猫咪的四种核心体验
               </h2>
             </div>
-            <dl className="border-t border-[var(--line)]">
-              {specifications.map((item) => (
-                <div
-                  className="grid gap-3 border-b border-[var(--line)] py-5 sm:grid-cols-[9rem_1fr]"
-                  key={item.label}
+            <ol className="mt-9 grid border-t border-black/15 sm:mt-12 md:grid-cols-2">
+              {coreExperiences.map((feature, index) => (
+                <li
+                  className="grid grid-cols-[2rem_1fr] gap-4 border-b border-black/15 py-7 md:min-h-44 md:px-8 md:first:pl-0 md:even:border-l"
+                  key={feature.title}
                 >
-                  <dt className="text-sm text-[var(--muted)]">{item.label}</dt>
-                  <dd className="leading-7">{item.values.join(" / ")}</dd>
-                </div>
+                  <span className="pt-1 text-xs text-[var(--moss)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="text-xl font-medium">{feature.displayTitle}</h3>
+                    <p className="mt-3 max-w-[29rem] text-sm leading-7 text-[#5e6966]">
+                      {feature.description}
+                    </p>
+                  </div>
+                </li>
               ))}
-            </dl>
+            </ol>
           </div>
         </section>
       ) : null}
 
-      {product.modules.length > 0 ? (
-        <section className="page-shell py-16 sm:py-24">
-          <p className="eyebrow">MODULES & ACCESSORIES</p>
-          <h2 className="mt-4 text-3xl font-medium tracking-[-0.045em] sm:text-5xl">
-            模块与配件
-          </h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {product.modules.map((module) => (
-              <article
-                className="overflow-hidden rounded-[1.5rem] border border-[var(--line)] bg-white/50"
-                key={module.name}
-              >
-                {module.image ? (
-                  <ProductImageFigure className="aspect-[4/3]" image={module.image} />
-                ) : null}
-                <div className="p-6">
-                  <h3 className="text-xl font-medium">{module.name}</h3>
-                  {module.description ? (
-                    <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
-                      {module.description}
+      {featuredModules.length > 0 ? (
+        <section className={`${sectionClass} py-14 sm:py-20 lg:py-28`}>
+          <div className="mb-9 max-w-[38rem] sm:mb-12">
+            <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
+              MODULE EXPLORATION
+            </p>
+            <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
+              模块探索
+            </h2>
+            <p className="mt-5 text-base leading-8 text-[#5f6966]">
+              从高处瞭望到低处安睡，四个重点模块对应猫咪不同的停留方式。
+            </p>
+          </div>
+          <ModuleExplorer
+            featured={featuredModules}
+            note={product.moduleNote}
+            overviewImage={mainImage ?? featuredModules[0].image}
+            remaining={remainingModules}
+          />
+          <div className="mt-9 border-t border-black/10 pt-6 sm:hidden">
+            <Link
+              className="product-detail-control group inline-flex min-h-11 items-center gap-3 text-sm font-medium text-[var(--moss)]"
+              href="/contact"
+            >
+              预约产品咨询 <span aria-hidden="true" className="product-detail-action-arrow">→</span>
+            </Link>
+          </div>
+        </section>
+      ) : null}
+
+      {(product.materials.length > 0 || product.overallDimensions || dimensionImages.length > 0) ? (
+        <section className={`${sectionClass} border-t border-black/10 py-14 sm:py-20 lg:py-28`}>
+          <div className="grid gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
+            <div>
+              <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
+                DESIGN DETAILS
+              </p>
+              <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
+                设计细节
+              </h2>
+              {product.materialDescription ? (
+                <p className="mt-7 max-w-[37rem] text-base leading-8 text-[#5f6966] sm:text-lg sm:leading-9">
+                  {product.materialDescription}
+                </p>
+              ) : null}
+              {materialItems.length > 0 ? <MaterialExplorer items={materialItems} /> : null}
+              {product.materialNote ? (
+                <p className="mt-6 max-w-[37rem] text-xs leading-6 text-[#747c79]">
+                  {product.materialNote}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="lg:pt-12">
+              {product.overallDimensions ? (
+                <div className="border-t border-black/15 pt-5">
+                  <p className="text-xs tracking-[0.16em] text-[#737c79]">产品尺寸</p>
+                  <p className="mt-3 text-2xl font-medium tracking-[-0.03em] sm:text-3xl">
+                    {product.overallDimensions}
+                  </p>
+                  {product.dimensionsDisplay ? (
+                    <p className="mt-2 text-sm leading-7 text-[#66706e]">
+                      {product.dimensionsDisplay}
+                    </p>
+                  ) : null}
+                  {product.dimensionsNote ? (
+                    <p className="mt-4 text-xs leading-6 text-[#747c79]">
+                      {product.dimensionsNote}
                     </p>
                   ) : null}
                 </div>
-              </article>
-            ))}
+              ) : null}
+              {(dimensionImages[0] || drawingImages[0]) ? (
+                <div className="mt-8 grid grid-cols-2 gap-5">
+                  {dimensionImages[0] ? (
+                    <ImageLightbox
+                      gallery={designGallery}
+                      image={dimensionImages[0]}
+                      label="整体尺寸图"
+                    />
+                  ) : null}
+                  {drawingImages[0] ? (
+                    <ImageLightbox
+                      gallery={designGallery}
+                      image={drawingImages[0]}
+                      label="模块系统图"
+                    />
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
           </div>
+        </section>
+      ) : null}
+
+      {prototypePrimaryImages.length > 0 ? (
+        <section className={`${sectionClass} border-t border-black/10 py-14 sm:py-20 lg:py-28`}>
+          <div className="max-w-[38rem]">
+            <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
+              PROTOTYPE VERIFICATION
+            </p>
+            <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
+              打样与组装验证
+            </h2>
+            {product.prototypeNote ? (
+              <p className="mt-6 text-base leading-8 text-[#5f6966]">
+                {product.prototypeNote}
+              </p>
+            ) : null}
+          </div>
+          <div className="mt-9 grid items-start gap-8 md:grid-cols-[0.72fr_1.28fr] lg:mt-12 lg:gap-12">
+            {prototypePrimaryImages[0] ? (
+              <ProductMedia
+                frameClassName="aspect-[3/4]"
+                image={prototypePrimaryImages[0]}
+                imageClassName="object-contain"
+                sizes="(min-width: 768px) 38vw, 100vw"
+              />
+            ) : null}
+            {prototypePrimaryImages[1] ? (
+              <ImageLightbox
+                gallery={designGallery}
+                image={prototypePrimaryImages[1]}
+                label="组装步骤设计图"
+              />
+            ) : null}
+          </div>
+          {extraPrototypeImages.length > 0 ? (
+            <details className="mt-9 border-t border-black/12 pt-5">
+              <summary className="cursor-pointer text-sm font-medium text-[#2d3937]">
+                查看更多打样资料
+              </summary>
+              <div className="mt-6 grid gap-6 md:grid-cols-2">
+                {extraPrototypeImages.map((image) => (
+                  <ProductMedia
+                    frameClassName="aspect-[4/3]"
+                    image={image}
+                    imageClassName="object-contain"
+                    key={image.src}
+                  />
+                ))}
+              </div>
+            </details>
+          ) : null}
         </section>
       ) : null}
 
       {galleryImages.length > 0 ? (
-        <section className="page-shell py-16 sm:py-24">
-          <div className="flex items-end justify-between gap-6 border-b border-[var(--line)] pb-6">
-            <div>
-              <p className="eyebrow">GALLERY</p>
-              <h2 className="mt-4 text-3xl font-medium tracking-[-0.045em] sm:text-5xl">
-                图片画廊
-              </h2>
-            </div>
+        <section className={`${sectionClass} border-t border-black/10 py-14 sm:py-20 lg:py-28`}>
+          <div className="max-w-[38rem]">
+            <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
+              EDITORIAL GALLERY
+            </p>
+            <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
+              猫与透明家具的生活场景
+            </h2>
           </div>
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
-            {galleryImages.map((image) => (
-              <ProductImageFigure
-                className="aspect-[4/3] rounded-[1.5rem]"
-                image={image}
-                key={`${image.src}-${image.alt}`}
-              />
+          <div className="mt-9 grid gap-8 md:grid-cols-2 lg:mt-12 lg:grid-cols-12 lg:items-start">
+            {galleryImages[0] ? (
+              <div className="md:col-span-2 lg:col-span-12">
+                <ProductMedia
+                  frameClassName="aspect-[16/9]"
+                  image={galleryImages[0]}
+                  imageClassName="object-cover"
+                  sizes="(min-width: 1024px) 1200px, 100vw"
+                />
+              </div>
+            ) : null}
+            {galleryImages.slice(1).map((image, index) => (
+              <div
+                className={index === 2 ? "lg:col-span-4 lg:pt-16" : "lg:col-span-4"}
+                key={image.src}
+              >
+                <ProductMedia
+                  frameClassName="aspect-[3/4]"
+                  image={image}
+                  imageClassName="object-contain"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                />
+              </div>
             ))}
           </div>
         </section>
       ) : null}
 
-      {product.video.url && product.video.cover ? (
-        <section className="page-shell pb-16 sm:pb-24">
-          <a
-            className="group relative block overflow-hidden rounded-[1.5rem] sm:rounded-[2.25rem]"
-            href={product.video.url}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <ProductImageFigure
-              className="aspect-video transition-transform duration-700 group-hover:scale-[1.015]"
-              image={product.video.cover}
-            />
-            <span className="absolute inset-0 grid place-items-center bg-black/10">
-              <span className="grid h-16 w-16 place-items-center rounded-full bg-white/90 text-sm shadow-lg">
-                播放
-              </span>
-            </span>
-          </a>
+      {product.standardExclusions.length > 0 ? (
+        <section className={`${sectionClass} border-t border-black/10 py-14 sm:py-20 lg:py-24`}>
+          <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+            <div>
+              <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
+                STANDARD CONFIGURATION
+              </p>
+              <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
+                标准配置说明
+              </h2>
+            </div>
+            <div>
+              <h3 className="text-base font-medium">图片中以下物品不包含在标准配置中</h3>
+              <ul className="mt-5 grid grid-cols-2 gap-x-8 border-t border-black/12">
+                {product.standardExclusions.map((item) => (
+                  <li className="border-b border-black/12 py-4 text-sm" key={item}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              {product.cushionNote ? (
+                <p className="mt-6 text-xs leading-6 text-[#747c79]">
+                  {product.cushionNote}
+                </p>
+              ) : null}
+              {product.displayNotice ? (
+                <p className="mt-3 text-xs leading-6 text-[#747c79]">
+                  <strong className="mr-2 font-medium text-[#3d4744]">图片展示说明</strong>
+                  {product.displayNotice}
+                </p>
+              ) : null}
+            </div>
+          </div>
         </section>
       ) : null}
 
-      <nav
-        aria-label="上一款和下一款产品"
-        className="border-t border-[var(--line)] bg-[#f7f6f2]"
-      >
-        <div className="page-shell grid sm:grid-cols-2">
-          {previousProduct ? (
-            <Link
-              className="border-b border-[var(--line)] py-8 transition-colors hover:text-[var(--moss)] sm:border-b-0 sm:border-r sm:pr-8"
-              href={`/products/${previousProduct.slug}`}
-            >
-              <span className="text-xs text-[var(--muted)]">← 上一款</span>
-              <strong className="mt-3 block text-lg font-medium">{previousProduct.name}</strong>
-            </Link>
-          ) : (
-            <span aria-hidden="true" />
-          )}
-          {nextProduct ? (
-            <Link
-              className="py-8 text-right transition-colors hover:text-[var(--moss)] sm:pl-8"
-              href={`/products/${nextProduct.slug}`}
-            >
-              <span className="text-xs text-[var(--muted)]">下一款 →</span>
-              <strong className="mt-3 block text-lg font-medium">{nextProduct.name}</strong>
-            </Link>
-          ) : null}
-        </div>
-      </nav>
-    </>
+      {product.consultation ? (
+        <section className={`${sectionClass} pb-14 sm:pb-20 lg:pb-24`}>
+          <div className="bg-[#273130] px-6 py-9 text-white sm:px-10 sm:py-11 lg:grid lg:grid-cols-[1fr_auto] lg:items-center lg:gap-12 lg:px-12">
+            <div>
+              <p className="hidden text-xs font-medium tracking-[0.18em] text-[#9bd8e1] sm:block">
+                CATDOW CONSULTATION
+              </p>
+              <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-4xl">
+                {product.consultation.title}
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
+                {product.consultation.description}
+              </p>
+            </div>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
+              <Link
+                className="product-detail-control group inline-flex min-h-12 w-full items-center justify-center gap-3 bg-white px-6 text-sm font-medium text-[#273130] hover:bg-[#d9f0f3] sm:w-auto"
+                href="/contact"
+              >
+                {product.consultation.primaryLabel}
+                <span aria-hidden="true" className="product-detail-action-arrow">→</span>
+              </Link>
+              {product.consultation.secondaryLabel ? (
+                <Link
+                  className="product-detail-control group inline-flex min-h-12 w-full items-center justify-center gap-3 border border-white/35 px-6 text-sm font-medium text-white hover:border-white/75 sm:w-auto"
+                  href="/contact"
+                >
+                  {product.consultation.secondaryLabel}
+                  <span aria-hidden="true" className="product-detail-action-arrow">→</span>
+                </Link>
+              ) : null}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {(previousProduct || nextProduct) ? (
+        <nav aria-label="上一款和下一款产品" className="border-t border-black/10">
+          <div className={`${sectionClass} grid sm:grid-cols-2`}>
+            {previousProduct ? (
+              <Link
+                className="border-b border-black/10 py-8 transition-colors hover:text-[var(--moss)] sm:border-b-0 sm:border-r sm:pr-8"
+                href={`/products/${previousProduct.slug}`}
+              >
+                <span className="text-xs text-[#747c79]">← 上一款</span>
+                <strong className="mt-3 block text-lg font-medium">{previousProduct.name}</strong>
+              </Link>
+            ) : (
+              <span aria-hidden="true" />
+            )}
+            {nextProduct ? (
+              <Link
+                className="py-8 text-right transition-colors hover:text-[var(--moss)] sm:pl-8"
+                href={`/products/${nextProduct.slug}`}
+              >
+                <span className="text-xs text-[#747c79]">下一款 →</span>
+                <strong className="mt-3 block text-lg font-medium">{nextProduct.name}</strong>
+              </Link>
+            ) : null}
+          </div>
+        </nav>
+      ) : null}
+    </main>
   );
 }

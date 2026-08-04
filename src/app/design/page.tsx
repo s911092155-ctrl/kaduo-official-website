@@ -3,7 +3,7 @@ import { PageHero } from "@/components/page-hero";
 
 export const metadata: Metadata = {
   title: "设计理念",
-  description: "凯朵 KADUO 的人宠共居设计原则。",
+  description: "凯朵 CATDOW 的人宠共居设计原则。",
 };
 
 const methods = [

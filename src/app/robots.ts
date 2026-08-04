@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://kaduo.example.com/sitemap.xml",
+    sitemap: "https://catdow.example.com/sitemap.xml",
   };
 }

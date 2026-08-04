@@ -4,7 +4,7 @@ import { getVisibleProducts, publishedProducts } from "@/data/products";
 
 export const metadata: Metadata = {
   title: "产品中心",
-  description: "浏览凯朵 KADUO 已公开的宠物家居产品。",
+  description: "浏览凯朵 CATDOW 已公开的宠物家居产品。",
 };
 
 export default function ProductsPage() {
@@ -21,7 +21,7 @@ export default function ProductsPage() {
         />
         <div className="page-shell relative grid min-h-[29rem] gap-10 py-16 sm:py-24 lg:grid-cols-[0.78fr_1.22fr] lg:items-end lg:py-28">
           <div>
-            <p className="eyebrow">KADUO PRODUCTS</p>
+            <p className="eyebrow">CATDOW PRODUCTS</p>
             <h1 className="mt-7 max-w-xl text-[clamp(3.3rem,8vw,7.8rem)] font-medium leading-[0.88] tracking-[-0.075em]">
               产品
               <br />

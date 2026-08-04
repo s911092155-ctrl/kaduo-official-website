@@ -35,6 +35,14 @@ function getProductImages(product: Product): ProductImageEntry[] {
     images.push({ field: `images.dimensions[${index}]`, image });
   });
 
+  product.images.drawings.forEach((image, index) => {
+    images.push({ field: `images.drawings[${index}]`, image });
+  });
+
+  product.images.prototypes.forEach((image, index) => {
+    images.push({ field: `images.prototypes[${index}]`, image });
+  });
+
   if (product.video.cover) {
     images.push({ field: "video.cover", image: product.video.cover });
   }
@@ -108,6 +116,12 @@ export function validateProducts(products: Product[]) {
       if (!hasText(image.alt)) {
         errors.push(`${productLabel} · ${field}.alt：图片 alt 不能为空。`);
       }
+
+      if (image.sourceType === "ai-render" && !hasText(image.caption)) {
+        errors.push(
+          `${productLabel} · ${field}.caption：AI效果图必须填写真实性说明。`,
+        );
+      }
     });
 
     if (product.status === "published") {
@@ -134,6 +148,10 @@ export function validateProducts(products: Product[]) {
       } else if (!hasText(product.images.main.alt)) {
         errors.push(
           `${productLabel} · images.main.alt：发布前必须填写产品主图 alt。`,
+        );
+      } else if (product.images.main.publicApproved === false) {
+        errors.push(
+          `${productLabel} · images.main.publicApproved：未获公开许可的图片不能作为已发布产品主图。`,
         );
       }
     }

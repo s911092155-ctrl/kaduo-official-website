@@ -38,7 +38,7 @@ export function ProductCard({
       </Link>
       <div className="flex min-h-64 flex-col p-6 sm:p-7">
         <p className="text-xs tracking-[0.14em] text-[var(--moss)]">
-          {product.series ?? "KADUO PRODUCT"}
+          {product.series ?? "CATDOW PRODUCT"}
         </p>
         <h2 className="mt-4 text-[1.65rem] font-medium leading-tight tracking-[-0.035em]">
           {product.name}
