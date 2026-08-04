@@ -54,7 +54,7 @@ export function ModuleExplorer({
           </AnimatePresence>
         </div>
 
-        <ol className="border-t border-black/12">
+        <ol className="product-detail-module-panel px-5">
           {featured.map((item, index) => {
             const selected = index === activeIndex;
 

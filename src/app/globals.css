@@ -132,6 +132,7 @@ button {
   border-color: rgba(255, 255, 255, 0.14);
   background: rgba(5, 7, 10, 0.94);
   color: #f3f8fa;
+  transition: none;
 }
 
 .site-brand {
@@ -150,6 +151,25 @@ button {
 
 .site-nav-link:hover {
   color: #8deaff;
+}
+
+.site-header--scrolled {
+  border-color: rgba(58, 51, 43, 0.12);
+  background: #faf8f3;
+  color: #242829;
+  box-shadow: 0 0.45rem 1.4rem rgba(74, 63, 51, 0.06);
+}
+
+.site-header--scrolled .site-brand span:last-child {
+  color: #347f85;
+}
+
+.site-header--scrolled .site-nav-link {
+  color: rgba(36, 40, 41, 0.72);
+}
+
+.site-header--scrolled .site-nav-link:hover {
+  color: #347f85;
 }
 
 .mobile-nav__trigger {
@@ -198,10 +218,10 @@ button {
   width: min(80vw, 20rem);
   flex-direction: column;
   padding: 1.1rem 1.15rem 1.25rem;
-  background: rgba(248, 247, 243, 0.97);
+  border-left: 1px solid rgba(70, 61, 51, 0.1);
+  background: #faf8f3;
   color: #242829;
-  box-shadow: -1rem 0 3rem rgba(36, 40, 41, 0.1);
-  backdrop-filter: blur(12px);
+  box-shadow: -1rem 0 3rem rgba(74, 63, 51, 0.08);
 }
 
 .mobile-nav__drawer-head {
@@ -313,6 +333,63 @@ button {
 .mobile-nav__drawer a:focus-visible {
   outline: 2px solid #347f85;
   outline-offset: 3px;
+}
+
+.product-detail-hero-caption,
+.product-detail-module-panel,
+.product-detail-lightbox-toolbar,
+.product-detail-lightbox-close {
+  border: 1px solid rgba(70, 61, 51, 0.12);
+  background: #faf8f3;
+  box-shadow: 0 0.55rem 1.5rem rgba(74, 63, 51, 0.07);
+}
+
+.product-detail-hero-caption {
+  border-radius: 0.7rem;
+}
+
+.product-detail-module-panel {
+  border-radius: 1rem;
+}
+
+.product-detail-module-panel button:focus-visible {
+  outline: 2px solid #347f85;
+  outline-offset: -4px;
+}
+
+.product-detail-lightbox-toolbar {
+  border-radius: 0.75rem;
+}
+
+.product-detail-lightbox-close {
+  box-shadow: none;
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .site-header--scrolled {
+    background: rgba(250, 248, 243, 0.82);
+    -webkit-backdrop-filter: blur(16px) saturate(115%);
+    backdrop-filter: blur(16px) saturate(115%);
+  }
+
+  .mobile-nav__drawer {
+    background: rgba(250, 248, 243, 0.92);
+    -webkit-backdrop-filter: blur(16px) saturate(112%);
+    backdrop-filter: blur(16px) saturate(112%);
+  }
+
+  .product-detail-hero-caption,
+  .product-detail-module-panel,
+  .product-detail-lightbox-toolbar,
+  .product-detail-lightbox-close {
+    background: rgba(250, 248, 243, 0.72);
+    -webkit-backdrop-filter: blur(16px) saturate(115%);
+    backdrop-filter: blur(16px) saturate(115%);
+  }
+
+  .product-detail-lightbox-close {
+    background: rgba(250, 248, 243, 0.86);
+  }
 }
 
 .site-footer {
@@ -902,6 +979,12 @@ button {
 .site-header--home {
   width: 100%;
   color: var(--ink);
+}
+
+.site-header--home:not(.site-header--scrolled) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
 .site-header--home .site-brand span:last-child {

@@ -186,6 +186,7 @@ export default async function ProductDetailPage({
                 frameClassName="aspect-[16/10] sm:aspect-[4/3]"
                 image={mainImage}
                 imageClassName="object-cover"
+                captionOverlay
                 priority
                 sizes="(min-width: 1024px) 62vw, 100vw"
               />

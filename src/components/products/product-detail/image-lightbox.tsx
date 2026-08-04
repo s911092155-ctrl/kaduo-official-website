@@ -101,11 +101,11 @@ export function ImageLightbox({ image, label }: ImageLightboxProps) {
         ref={dialogRef}
       >
         <div className="relative max-h-[94vh] w-[94vw] max-w-[76rem] overflow-hidden bg-[#f8f7f3] p-4 shadow-2xl sm:p-6">
-          <div className="flex items-center justify-between gap-5 border-b border-black/10 pb-4">
+          <div className="product-detail-lightbox-toolbar flex items-center justify-between gap-5 px-4 py-3 sm:px-5">
             <h2 className="text-base font-medium" id={titleId}>{label}</h2>
             <button
               aria-label="关闭设计图"
-              className="grid size-10 shrink-0 place-items-center rounded-full border border-black/20 text-xl outline-none transition-colors hover:border-black/45 focus-visible:border-[var(--moss)]"
+              className="product-detail-lightbox-close grid size-10 shrink-0 place-items-center rounded-full text-xl outline-none transition-colors hover:border-black/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--moss)]"
               onClick={closeDialog}
               type="button"
             >

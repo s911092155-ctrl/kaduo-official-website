@@ -14,6 +14,7 @@ type ProductMediaProps = {
   priority?: boolean;
   sizes?: string;
   showCaption?: boolean;
+  captionOverlay?: boolean;
 };
 
 export function ProductMedia({
@@ -23,6 +24,7 @@ export function ProductMedia({
   priority = false,
   sizes = "(min-width: 1024px) 55vw, 100vw",
   showCaption = true,
+  captionOverlay = false,
 }: ProductMediaProps) {
   if (image.publicApproved === false) {
     return null;
@@ -35,7 +37,7 @@ export function ProductMedia({
       : "object-cover";
 
   return (
-    <figure>
+    <figure className={captionOverlay ? "relative" : undefined}>
       <div className={`relative overflow-hidden bg-[#eceeea] ${frameClassName}`}>
         <Image
           alt={image.alt}
@@ -47,7 +49,13 @@ export function ProductMedia({
         />
       </div>
       {showCaption && image.caption ? (
-        <figcaption className="mt-3 flex max-w-3xl flex-wrap items-start gap-x-2 gap-y-1 text-[0.7rem] leading-5 text-[#66706e]">
+        <figcaption
+          className={
+            captionOverlay
+              ? "product-detail-hero-caption absolute bottom-2 left-2 right-2 z-10 flex max-w-[34rem] flex-wrap items-start gap-x-2 gap-y-0.5 px-3 py-2 text-[0.64rem] leading-4 text-[#4d5754] sm:bottom-3 sm:left-3 sm:right-auto"
+              : "mt-3 flex max-w-3xl flex-wrap items-start gap-x-2 gap-y-1 text-[0.7rem] leading-5 text-[#66706e]"
+          }
+        >
           {image.sourceType ? (
             <span className="shrink-0 font-medium text-[#34413f]">
               {sourceTypeLabels[image.sourceType]}
