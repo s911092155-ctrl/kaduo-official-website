@@ -41,7 +41,7 @@ export function ProductMedia({
           alt={image.alt}
           className={imageClassName ?? defaultImageClass}
           fill
-          priority={priority}
+          loading={priority ? "eager" : undefined}
           sizes={sizes}
           src={image.src}
         />
