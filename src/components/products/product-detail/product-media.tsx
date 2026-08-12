@@ -1,11 +1,6 @@
 import Image from "next/image";
+import {useTranslations} from "next-intl";
 import type { ProductImage } from "@/data/products";
-
-const sourceTypeLabels = {
-  "ai-render": "AI效果示意",
-  "prototype-photo": "打样实拍",
-  "design-drawing": "设计图",
-} as const;
 
 type ProductMediaProps = {
   image: ProductImage;
@@ -26,6 +21,7 @@ export function ProductMedia({
   showCaption = true,
   captionOverlay = false,
 }: ProductMediaProps) {
+  const t = useTranslations("ProductDetail.imageTypes");
   if (image.publicApproved === false) {
     return null;
   }
@@ -58,7 +54,7 @@ export function ProductMedia({
         >
           {image.sourceType ? (
             <span className="shrink-0 font-medium text-[#34413f]">
-              {sourceTypeLabels[image.sourceType]}
+              {t(image.sourceType)}
             </span>
           ) : null}
           <span>{image.caption}</span>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import {getTranslations, setRequestLocale} from "next-intl/server";
 import { notFound } from "next/navigation";
 import {
   ImageLightbox,
@@ -20,24 +20,13 @@ import {
   publishedProducts,
   type ProductImage,
 } from "@/data/products";
+import {Link} from "@/i18n/navigation";
+import {localizedMetadata} from "@/i18n/metadata";
+import type {AppLocale} from "@/i18n/routing";
 
 type ProductDetailPageProps = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: AppLocale; slug: string }>;
 };
-
-const coreExperienceTitles = [
-  ["分层垂直攀爬", "分层攀爬"],
-  ["多种休憩空间", "多种休憩"],
-  ["躲藏与观察", "躲藏观察"],
-  ["抓挠与互动", "抓挠互动"],
-] as const;
-
-const featuredModuleNames = [
-  "顶部瞭望猫屋",
-  "悬浮猫兜",
-  "透明中舱猫房",
-  "底层休憩猫窝",
-] as const;
 
 function isRenderableImage(image: ProductImage) {
   return image.publicApproved !== false;
@@ -50,34 +39,30 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: ProductDetailPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const product = getVisibleProductBySlug(slug);
+  const { locale, slug } = await params;
+  const product = getVisibleProductBySlug(slug, locale);
+  const notFoundT = await getTranslations({locale, namespace:"NotFound"});
 
   if (!product) {
-    return { title: "产品未找到" };
+    return { title: notFoundT("productTitle"), robots: {index:false,follow:false} };
   }
 
-  return {
-    title: product.seoTitle ? { absolute: product.seoTitle } : product.name,
-    description:
-      product.seoDescription ??
-      product.summary ??
-      `凯朵 CATDOW ${product.name}产品信息。`,
-    robots: product.status === "published" ? undefined : { index: false, follow: false },
-  };
+  return localizedMetadata({locale, pathname:`/products/${slug}`, title:product.seoTitle ?? product.name, description:product.seoDescription ?? product.summary ?? product.name, robots:product.status === "published" ? undefined : {index:false,follow:false}});
 }
 
 export default async function ProductDetailPage({
   params,
 }: ProductDetailPageProps) {
-  const { slug } = await params;
-  const product = getVisibleProductBySlug(slug);
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("ProductDetail");
+  const product = getVisibleProductBySlug(slug, locale);
 
   if (!product) {
     notFound();
   }
 
-  const visibleProducts = getVisibleProducts();
+  const visibleProducts = getVisibleProducts(locale);
   const currentIndex = visibleProducts.findIndex((item) => item.id === product.id);
   const previousProduct = currentIndex > 0 ? visibleProducts[currentIndex - 1] : null;
   const nextProduct =
@@ -98,17 +83,14 @@ export default async function ProductDetailPage({
   const designParagraphs = product.designConcept
     ? product.designConcept.split("\n\n").filter(Boolean)
     : [];
-  const coreExperiences = coreExperienceTitles.flatMap(
-    ([sourceTitle, displayTitle]) => {
-      const feature = product.features.find((item) => item.title === sourceTitle);
-      return feature ? [{ ...feature, displayTitle }] : [];
-    },
-  );
+  const experienceNames = t.raw("coreExperienceNames") as string[];
+  const coreExperiences = [0, 1, 3, 4].flatMap((featureIndex, index) => product.features[featureIndex] ? [{...product.features[featureIndex], displayTitle:experienceNames[index]}] : []);
   const moduleImages = [mainImage, detailImages[0], sceneImages[1], detailImages[1]].filter(
     (image): image is ProductImage => Boolean(image),
   );
-  const featuredModules = featuredModuleNames.flatMap((name, index) => {
-    const productModule = product.modules.find((item) => item.name === name);
+  const featuredModuleIndexes = [9, 8, 6, 5];
+  const featuredModules = featuredModuleIndexes.flatMap((moduleIndex, index) => {
+    const productModule = product.modules[moduleIndex];
     const image = productModule?.image && isRenderableImage(productModule.image)
       ? productModule.image
       : moduleImages[index];
@@ -117,9 +99,7 @@ export default async function ProductDetailPage({
       ? [{ ...productModule, image } satisfies ModuleExplorerItem]
       : [];
   });
-  const remainingModules = product.modules.filter(
-    (module) => !featuredModuleNames.includes(module.name as (typeof featuredModuleNames)[number]),
-  );
+  const remainingModules = product.modules.filter((_, index) => !featuredModuleIndexes.includes(index));
   const conceptImage = sceneImages[0] ?? mainImage;
   const galleryImages = [mainImage, detailImages[0], detailImages[1], sceneImages[1]].filter(
     (image): image is ProductImage => Boolean(image),
@@ -133,43 +113,36 @@ export default async function ProductDetailPage({
   ];
   const designGallery = [
     dimensionImages[0]
-      ? { image: dimensionImages[0], label: "整体尺寸图" }
+      ? { image: dimensionImages[0], label: t("overallDrawing") }
       : null,
     drawingImages[0]
-      ? { image: drawingImages[0], label: "模块系统图" }
+      ? { image: drawingImages[0], label: t("moduleDrawing") }
       : null,
     drawingImages[1]
-      ? { image: drawingImages[1], label: "组装步骤设计图" }
+      ? { image: drawingImages[1], label: t("assemblyDrawing") }
       : null,
   ].filter((item): item is LightboxItem => Boolean(item));
-  const acrylicDescription =
-    product.materials.find((item) => item.includes("高透亚克力")) ??
-    product.materialDescription;
-  const woodDescription = product.materials.find((item) =>
-    item.includes("浅色木质饰面平台"),
-  );
-  const connectionDescription =
-    product.materials.find((item) => item.includes("连接与固定结构")) ??
-    product.features.find((feature) => feature.title === "模块化组合")
-      ?.description;
+  const acrylicDescription = product.materials[0] ?? product.materialDescription;
+  const woodDescription = product.materials[2];
+  const connectionDescription = product.materials[3] ?? product.features[5]?.description;
   const materialItems = [
     acrylicDescription && (detailImages[0] ?? mainImage)
       ? {
-          name: "高透亚克力",
+          name: t("materialsTabs.acrylic"),
           description: acrylicDescription,
           image: detailImages[0] ?? mainImage,
         }
       : null,
     woodDescription && (prototypeImages[0] ?? detailImages[0])
       ? {
-          name: "木质平台",
+          name: t("materialsTabs.wood"),
           description: woodDescription,
           image: prototypeImages[0] ?? detailImages[0],
         }
       : null,
     connectionDescription && (drawingImages[0] ?? detailImages[1])
       ? {
-          name: "模块连接",
+          name: t("materialsTabs.connection"),
           description: connectionDescription,
           image: drawingImages[0] ?? detailImages[1],
         }
@@ -183,7 +156,7 @@ export default async function ProductDetailPage({
       <div className="border-b border-black/10">
         <div className={`${sectionClass} flex min-h-14 items-center gap-2 overflow-hidden text-xs text-[#747c79]`}>
           <Link className="shrink-0 transition-colors hover:text-[#202725]" href="/products">
-            产品中心
+            {t("products")}
           </Link>
           <span aria-hidden="true">/</span>
           <span className="truncate text-[#35403e]">{product.name}</span>
@@ -199,12 +172,12 @@ export default async function ProductDetailPage({
               </p>
               {isDraftPreview ? (
                 <span className="border border-[color:rgba(8,127,153,0.28)] px-2.5 py-1 text-[0.65rem] font-medium tracking-[0.12em] text-[var(--moss)]">
-                  草稿预览 · 尚未公开
+                  {t("draftPreview")}
                 </span>
               ) : null}
               {product.developmentOnly ? (
                 <span className="border border-black/15 px-2.5 py-1 text-[0.65rem] font-medium tracking-[0.12em] text-[#66706e]">
-                  开发演示 · 非正式产品
+                  {t("developmentPreview")}
                 </span>
               ) : null}
             </div>
@@ -244,7 +217,7 @@ export default async function ProductDetailPage({
               />
             ) : (
               <div className="grid aspect-[4/3] place-items-center bg-[#eceeea] px-8 text-center text-sm text-[#69736f]">
-                产品主图尚未配置
+                {t("mainImageMissing")}
               </div>
             )}
           </div>
@@ -266,10 +239,10 @@ export default async function ProductDetailPage({
             ) : null}
             <div className="max-w-[37rem]">
               <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
-                DESIGN CONCEPT
+                {t("designConcept")}
               </p>
               <h2 className="text-3xl font-medium leading-tight tracking-[-0.045em] sm:mt-4 sm:text-5xl">
-                {product.designConceptTitle ?? "设计理念"}
+                {product.designConceptTitle ?? t("designConcept")}
               </h2>
               <div className="mt-7 space-y-5 text-base leading-8 text-[#5f6966] sm:text-lg sm:leading-9">
                 {designParagraphs.map((paragraph) => (
@@ -286,10 +259,10 @@ export default async function ProductDetailPage({
           <div className={sectionClass}>
             <div className="max-w-[38rem]">
               <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
-                CORE EXPERIENCE
+                {t("coreExperience")}
               </p>
               <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
-                猫咪的四种核心体验
+                {t("coreExperienceTitle")}
               </h2>
             </div>
             <ol className="mt-9 grid border-t border-black/15 sm:mt-12 md:grid-cols-2">
@@ -318,17 +291,18 @@ export default async function ProductDetailPage({
         <section className={`${sectionClass} py-14 sm:py-20 lg:py-28`}>
           <div className="mb-9 max-w-[38rem] sm:mb-12">
             <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
-              MODULE EXPLORATION
+              {t("moduleExplorer")}
             </p>
             <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
-              模块探索
+              {t("moduleExplorer")}
             </h2>
             <p className="mt-5 text-base leading-8 text-[#5f6966]">
-              从高处瞭望到低处安睡，四个重点模块对应猫咪不同的停留方式。
+              {t("moduleExplorerBody")}
             </p>
           </div>
           <ModuleExplorer
             featured={featuredModules}
+            labels={{all:t("allModules"), collapse:t("collapseModules"), group:t("moduleExplorer")}}
             note={product.moduleNote}
             overviewImage={mainImage ?? featuredModules[0].image}
             remaining={remainingModules}
@@ -338,7 +312,7 @@ export default async function ProductDetailPage({
               className="product-detail-control group inline-flex min-h-11 items-center gap-3 text-sm font-medium text-[var(--moss)]"
               href="/contact"
             >
-              预约产品咨询 <span aria-hidden="true" className="product-detail-action-arrow">→</span>
+              {t("midConsult")} <span aria-hidden="true" className="product-detail-action-arrow">→</span>
             </Link>
           </div>
         </section>
@@ -349,17 +323,17 @@ export default async function ProductDetailPage({
           <div className="grid gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
             <div>
               <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
-                DESIGN DETAILS
+                {t("designDetails")}
               </p>
               <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
-                设计细节
+                {t("designDetails")}
               </h2>
               {product.materialDescription ? (
                 <p className="mt-7 max-w-[37rem] text-base leading-8 text-[#5f6966] sm:text-lg sm:leading-9">
                   {product.materialDescription}
                 </p>
               ) : null}
-              {materialItems.length > 0 ? <MaterialExplorer items={materialItems} /> : null}
+              {materialItems.length > 0 ? <MaterialExplorer items={materialItems} label={t("materials")} /> : null}
               {product.materialNote ? (
                 <p className="mt-6 max-w-[37rem] text-xs leading-6 text-[#747c79]">
                   {product.materialNote}
@@ -370,7 +344,7 @@ export default async function ProductDetailPage({
             <div className="lg:pt-12">
               {product.overallDimensions ? (
                 <div className="border-t border-black/15 pt-5">
-                  <p className="text-xs tracking-[0.16em] text-[#737c79]">产品尺寸</p>
+                  <p className="text-xs tracking-[0.16em] text-[#737c79]">{t("dimensions")}</p>
                   <p className="mt-3 text-2xl font-medium tracking-[-0.03em] sm:text-3xl">
                     {product.overallDimensions}
                   </p>
@@ -392,14 +366,16 @@ export default async function ProductDetailPage({
                     <ImageLightbox
                       gallery={designGallery}
                       image={dimensionImages[0]}
-                      label="整体尺寸图"
+                      label={t("overallDrawing")}
+                      labels={{open:t("drawingOpen"),previous:t("lightbox.previous"),next:t("lightbox.next"),zoomOut:t("lightbox.zoomOut"),zoomIn:t("lightbox.zoomIn"),close:t("lightbox.close"),canvas:t("lightbox.canvas"),keyboardHint:t("lightbox.keyboardHint")}}
                     />
                   ) : null}
                   {drawingImages[0] ? (
                     <ImageLightbox
                       gallery={designGallery}
                       image={drawingImages[0]}
-                      label="模块系统图"
+                      label={t("moduleDrawing")}
+                      labels={{open:t("drawingOpen"),previous:t("lightbox.previous"),next:t("lightbox.next"),zoomOut:t("lightbox.zoomOut"),zoomIn:t("lightbox.zoomIn"),close:t("lightbox.close"),canvas:t("lightbox.canvas"),keyboardHint:t("lightbox.keyboardHint")}}
                     />
                   ) : null}
                 </div>
@@ -413,10 +389,10 @@ export default async function ProductDetailPage({
         <section className={`${sectionClass} border-t border-black/10 py-14 sm:py-20 lg:py-28`}>
           <div className="max-w-[38rem]">
             <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
-              PROTOTYPE VERIFICATION
+              {t("prototype")}
             </p>
             <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
-              打样与组装验证
+              {t("prototype")}
             </h2>
             {product.prototypeNote ? (
               <p className="mt-6 text-base leading-8 text-[#5f6966]">
@@ -437,14 +413,15 @@ export default async function ProductDetailPage({
               <ImageLightbox
                 gallery={designGallery}
                 image={prototypePrimaryImages[1]}
-                label="组装步骤设计图"
+                label={t("assemblyDrawing")}
+                labels={{open:t("drawingOpen"),previous:t("lightbox.previous"),next:t("lightbox.next"),zoomOut:t("lightbox.zoomOut"),zoomIn:t("lightbox.zoomIn"),close:t("lightbox.close"),canvas:t("lightbox.canvas"),keyboardHint:t("lightbox.keyboardHint")}}
               />
             ) : null}
           </div>
           {extraPrototypeImages.length > 0 ? (
             <details className="mt-9 border-t border-black/12 pt-5">
               <summary className="cursor-pointer text-sm font-medium text-[#2d3937]">
-                查看更多打样资料
+                {t("prototypeMore")}
               </summary>
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 {extraPrototypeImages.map((image) => (
@@ -465,10 +442,10 @@ export default async function ProductDetailPage({
         <section className={`${sectionClass} border-t border-black/10 py-14 sm:py-20 lg:py-28`}>
           <div className="max-w-[38rem]">
             <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
-              EDITORIAL GALLERY
+              {t("gallery")}
             </p>
             <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
-              猫与透明家具的生活场景
+              {t("galleryTitle")}
             </h2>
           </div>
           <div className="mt-9 grid gap-8 md:grid-cols-2 lg:mt-12 lg:grid-cols-12 lg:items-start">
@@ -504,14 +481,14 @@ export default async function ProductDetailPage({
           <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
             <div>
               <p className="hidden text-xs font-medium tracking-[0.18em] text-[var(--moss)] sm:block">
-                STANDARD CONFIGURATION
+                {t("standardExclusions")}
               </p>
               <h2 className="text-3xl font-medium tracking-[-0.045em] sm:mt-4 sm:text-5xl">
-                标准配置说明
+                {t("standardExclusions")}
               </h2>
             </div>
             <div>
-              <h3 className="text-base font-medium">图片中以下物品不包含在标准配置中</h3>
+              <h3 className="text-base font-medium">{t("notIncluded")}</h3>
               <ul className="mt-5 grid grid-cols-2 gap-x-8 border-t border-black/12">
                 {product.standardExclusions.map((item) => (
                   <li className="border-b border-black/12 py-4 text-sm" key={item}>
@@ -526,7 +503,7 @@ export default async function ProductDetailPage({
               ) : null}
               {product.displayNotice ? (
                 <p className="mt-3 text-xs leading-6 text-[#747c79]">
-                  <strong className="mr-2 font-medium text-[#3d4744]">图片展示说明</strong>
+                  <strong className="mr-2 font-medium text-[#3d4744]">{t("displayNoticeLabel")}</strong>
                   {product.displayNotice}
                 </p>
               ) : null}
@@ -572,14 +549,14 @@ export default async function ProductDetailPage({
       ) : null}
 
       {(previousProduct || nextProduct) ? (
-        <nav aria-label="上一款和下一款产品" className="border-t border-black/10">
+        <nav aria-label={t("previousNextLabel")} className="border-t border-black/10">
           <div className={`${sectionClass} grid sm:grid-cols-2`}>
             {previousProduct ? (
               <Link
                 className="border-b border-black/10 py-8 transition-colors hover:text-[var(--moss)] sm:border-b-0 sm:border-r sm:pr-8"
                 href={`/products/${previousProduct.slug}`}
               >
-                <span className="text-xs text-[#747c79]">← 上一款</span>
+                <span className="text-xs text-[#747c79]">← {t("previous")}</span>
                 <strong className="mt-3 block text-lg font-medium">{previousProduct.name}</strong>
               </Link>
             ) : (
@@ -590,7 +567,7 @@ export default async function ProductDetailPage({
                 className="py-8 text-right transition-colors hover:text-[var(--moss)] sm:pl-8"
                 href={`/products/${nextProduct.slug}`}
               >
-                <span className="text-xs text-[#747c79]">下一款 →</span>
+                <span className="text-xs text-[#747c79]">{t("next")} →</span>
                 <strong className="mt-3 block text-lg font-medium">{nextProduct.name}</strong>
               </Link>
             ) : null}

@@ -19,7 +19,7 @@ export type ProductStoryItem = {
   title: string;
 };
 
-export function StickyProductStory({ items }: { items: ProductStoryItem[] }) {
+export function StickyProductStory({ items, label }: { items: ProductStoryItem[]; label: string }) {
   const ref = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const shouldReduceMotion = useShouldReduceMotion();
@@ -36,7 +36,7 @@ export function StickyProductStory({ items }: { items: ProductStoryItem[] }) {
   const activeItem = items[activeIndex] ?? items[0];
 
   return (
-    <section ref={ref} className="product-story warm-shell" aria-label="旗舰产品设计叙事">
+    <section ref={ref} className="product-story warm-shell" aria-label={label}>
       <div className="product-story__steps">
         {items.map((item, index) => (
           <article

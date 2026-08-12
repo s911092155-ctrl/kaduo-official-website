@@ -11,6 +11,7 @@ kaduo-official-website
 - React
 - TypeScript
 - Tailwind CSS
+- next-intl（三语言路由与翻译）
 - ESLint
 
 依赖的准确版本记录在 `package-lock.json` 中。建议使用 Node.js 20.9 或更高版本。
@@ -24,7 +25,7 @@ npm install
 npm run dev
 ```
 
-然后在浏览器中打开 <http://localhost:3000>。
+然后在浏览器中打开 <http://localhost:3000>，根路径会进入简体中文首页 `/zh-CN`。繁体中文和英文首页分别是 `/zh-TW` 与 `/en`。
 
 日常修改后，可以运行：
 
@@ -39,12 +40,12 @@ npm run build
 
 | 页面 | 文件 |
 | --- | --- |
-| 首页 | `src/app/page.tsx` |
-| 产品中心 | `src/app/products/page.tsx` |
-| 产品详情 | `src/app/products/[slug]/page.tsx`（根据产品数据自动生成） |
-| 品牌故事 | `src/app/brand/page.tsx` |
-| 设计理念 | `src/app/design/page.tsx` |
-| 联系咨询 | `src/app/contact/page.tsx` |
+| 首页 | `src/app/[locale]/page.tsx` |
+| 产品中心 | `src/app/[locale]/products/page.tsx` |
+| 产品详情 | `src/app/[locale]/products/[slug]/page.tsx`（根据产品数据自动生成） |
+| 品牌故事 | `src/app/[locale]/brand/page.tsx` |
+| 设计理念 | `src/app/[locale]/design/page.tsx` |
+| 联系咨询 | `src/app/[locale]/contact/page.tsx` |
 
 网站顶部导航和页脚分别位于 `src/components/site-header.tsx` 与 `src/components/site-footer.tsx`。
 
@@ -56,14 +57,14 @@ npm run build
 
 1. 在 `products` 数组中复制一整条现有记录，并把现有内容替换成新产品已经确认的资料。
 2. 修改 `id` 和 `slug`。两者都使用不重复的小写英文，例如 `cloud-cat-bed`；`slug` 会成为网址的一部分。
-3. 填写已经确认的名称、系列、简介、设计理念、功能、材质和规格。
-4. 把产品图片放进 `public/images/products/产品英文目录/`，再把路径和 alt 文字填入产品记录。
+3. 在同一产品的 `translations` 中分别填写 `zh-CN`、`zh-TW` 和 `en`。不要复制三份完整产品对象；状态、slug、排序、图片路径和尺寸数值继续共用。
+4. 把产品图片放进 `public/images/products/产品英文目录/`。图片路径写在共用 `images` 中，三种语言的 alt 与 caption 写在各自翻译的 `imageTexts` 中。
 5. 保持 `status: "draft"`，先在本地检查。
 6. 资料与图片全部确认后，再改成 `status: "published"`。
 
 每款产品支持以下资料：
 
-- 中文名称、英文名称、中英文系列、产品类型与简短介绍
+- 三种语言的名称、系列、产品类型与简短介绍
 - 详情简介、设计理念、功能特点、材质说明
 - 整体尺寸、重量、适用猫咪信息
 - 主图、场景图、细节图、尺寸图、设计图和打样实拍图
@@ -88,12 +89,12 @@ npm run build
 
 把产品状态改成 `published` 前，至少要确认并填写：
 
-- 中文名称
-- slug
-- 产品系列
-- 简短介绍
-- 产品主图及其 alt 文字
+- 名称、产品系列与简短介绍
+- 产品主图及该语言的 alt 文字
 - 咨询按钮文案
+- SEO 标题和 SEO 描述
+
+以上必要字段必须在 `zh-CN`、`zh-TW` 和 `en` 三种语言中全部填写。缺少任何一种语言时，`npm run build` 会指出产品 slug、locale 和缺失字段。公开页面不会自动借用其他语言的内容。
 
 项目会在构建时自动检查 `src/data/products.ts`。重复的 `id` 或 `slug`、格式不正确的 slug、空白图片 alt、错误的本地图片路径和无效的 `sortOrder` 也会阻止构建。AI 效果图还必须填写真实性说明；未获公开许可的图片不能作为已发布产品主图。报错信息会写明产品和字段，先修正数据，再重新运行 `npm run build`。
 
@@ -103,7 +104,7 @@ npm run build
 
 1. 在 `public/images/products/` 下为产品建立独立目录。
 2. 放入主图、场景图、细节图和尺寸图，建议优先使用 WebP 格式。
-3. 在 `src/data/products.ts` 的 `images` 中填写每张图的路径与 alt 文字。
+3. 在 `src/data/products.ts` 的共用 `images` 中填写路径和真实性字段，再在每种语言的 `imageTexts` 中填写 alt 与 caption。
 
 每张图片还可以记录以下可选信息：
 
@@ -117,12 +118,14 @@ npm run build
 images: {
   main: {
     src: "/images/products/cloud-cat-bed/main.webp",
-    alt: "云朵猫窝在明亮客厅中的正面产品图",
+    sourceType: "prototype-photo",
+    publicApproved: true,
   },
   scenes: [
     {
       src: "/images/products/cloud-cat-bed/scene-01.webp",
-      alt: "猫咪在客厅使用云朵猫窝的场景图",
+      sourceType: "prototype-photo",
+      publicApproved: true,
     },
   ],
   details: [],
@@ -132,11 +135,19 @@ images: {
 
 alt 文字应简短说明图片里能看到什么，不要加入图片无法证明的材质、功能或认证。替换图片后，运行网站并打开对应产品详情页，分别检查电脑和手机尺寸。
 
-草稿产品可在 `npm run dev` 启动后，通过它的完整地址内部审核。例如仙人掌乐园的预览地址是 `/products/cactus-haven-acrylic-cat-tree`。页面会明确显示“草稿预览”，但生产构建不会公开草稿，也不会把草稿地址写入 sitemap。
+草稿产品可在 `npm run dev` 启动后，通过完整语言地址内部审核。例如简体中文预览地址是 `/zh-CN/products/cactus-haven-acrylic-cat-tree`，繁体中文和英文只需将开头改为 `/zh-TW` 或 `/en`。页面会明确显示“草稿预览”，但生产构建不会公开草稿，也不会把草稿地址写入 sitemap。
 
 更详细的目录示例见 `public/images/README.md`。
 
-首页当前使用的亚克力家具图片是视觉方向示意，不代表真实产品，也不代表“仙人掌乐园亚克力猫爬架”的真实结构。首页图片分别放在 `public/images/homepage/` 与 `public/images/cats/`，路径和替代文字集中维护在 `src/config/homepage-images.ts`。
+首页当前使用的亚克力家具图片是视觉方向示意，不代表真实产品，也不代表“仙人掌乐园亚克力猫爬架”的真实结构。首页图片分别放在 `public/images/homepage/` 与 `public/images/cats/`，路径集中维护在 `src/config/homepage-images.ts`，三语言替代文字在 `messages/*.json` 中维护。
+
+## 如何维护三种语言
+
+- 界面文字：修改 `messages/zh-CN.json`、`messages/zh-TW.json` 和 `messages/en.json`。
+- 产品文字：修改 `src/data/products.ts` 中对应产品的 `translations`。
+- 语言与路由：统一配置在 `src/i18n/routing.ts`；站内链接使用 `src/i18n/navigation.ts`，会自动保留当前语言。
+- 新增可见文案时，三份 messages 文件应使用相同键名；不要在组件中直接写死某一种语言。
+- 繁体中文应按台湾读者习惯校对，英文应保持简洁，不得补充未经确认的产品参数或承诺。
 
 收到正式照片后，优先使用相同文件名覆盖对应图片，这样不需要改页面布局。如果文件名必须变化，只需要修改 `src/config/homepage-images.ts`。替换后请分别检查电脑端和手机端，确认产品与猫没有被裁切或被文字遮挡。更详细的目录说明见 `public/images/README.md`。
 
