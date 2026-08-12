@@ -22,7 +22,7 @@ export function ProductMedia({
   captionOverlay = false,
 }: ProductMediaProps) {
   const t = useTranslations("ProductDetail.imageTypes");
-  if (image.publicApproved === false) {
+  if (image.publicApproved === false && process.env.NODE_ENV !== "development") {
     return null;
   }
 

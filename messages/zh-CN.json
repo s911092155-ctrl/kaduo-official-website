@@ -142,6 +142,7 @@
     "next": "下一款",
     "midConsult": "预约咨询",
     "imageTypes": {"ai-render":"AI效果示意","prototype-photo":"打样实拍","design-drawing":"设计图"},
+    "blushHaven": {"eyebrow":"人猫共居家具系列","livingEyebrow":"猫与客厅","designEyebrow":"V6 / 设计阶段","materialEyebrow":"材质与光影","galleryEyebrow":"视觉画廊","standardEyebrow":"标准配置","scenes":["猫的停留位置","在家一起生活","同一个客厅"],"materials":["透明亚克力","结构与光影","整体视角"],"livingTitle":"人和猫如何共享这张茶几","structureTitle":"V6设计结构","sizeTitle":"V6设计参考尺寸","galleryTitle":"一件客厅家具，从近处看","exclusions":"明确不包含","detailsLink":"了解产品配置"},
     "materialsTabs": {"acrylic":"高透亚克力","wood":"木质平台","connection":"模块连接"},
     "lightbox": {"previous":"上一张设计图","next":"下一张设计图","zoomOut":"缩小设计图","zoomIn":"放大设计图","close":"关闭设计图","canvas":"可放大并拖动的设计图","keyboardHint":"使用左右方向键切换"}
   },

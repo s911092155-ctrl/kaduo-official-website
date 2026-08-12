@@ -14,6 +14,7 @@ import {
   type ModuleExplorerItem,
 } from "@/components/products/product-detail/module-explorer";
 import { ProductMedia } from "@/components/products/product-detail/product-media";
+import {BlushHavenDetail} from "@/components/products/product-detail/blush-haven-detail";
 import {
   getVisibleProductBySlug,
   getVisibleProducts,
@@ -29,7 +30,7 @@ type ProductDetailPageProps = {
 };
 
 function isRenderableImage(image: ProductImage) {
-  return image.publicApproved !== false;
+  return image.publicApproved !== false || process.env.NODE_ENV === "development";
 }
 
 export function generateStaticParams() {
@@ -150,6 +151,10 @@ export default async function ProductDetailPage({
   ].filter((item): item is MaterialExplorerItem => Boolean(item));
   const sectionClass =
     "mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10";
+
+  if (product.slug === "blush-haven-cat-coffee-table") {
+    return <BlushHavenDetail isDraftPreview={isDraftPreview} product={product} />;
+  }
 
   return (
     <main className="overflow-clip bg-[#f8f7f3] text-[#202725]">
