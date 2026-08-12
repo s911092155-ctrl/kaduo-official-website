@@ -298,11 +298,19 @@ export function localizeProduct(product: Product, locale: AppLocale): LocalizedP
 
 function sortProducts(items: Product[]) {return [...items].sort((a,b) => a.sortOrder-b.sortOrder);}
 export const publishedProducts = sortProducts(products.filter((product) => product.status === "published" && !product.developmentOnly));
+const developmentPreviewProducts = sortProducts(products.filter((product) => product.status === "draft" && !product.developmentOnly));
 
 export function getLocalizedProductById(id: string, locale: AppLocale) {const product = products.find((item) => item.id === id); return product ? localizeProduct(product, locale) : null;}
+export function getDevelopmentPreviewProducts(locale: AppLocale) {
+  if (process.env.NODE_ENV !== "development") return [];
+  return developmentPreviewProducts.flatMap((product) => {
+    const localized = localizeProduct(product, locale);
+    return localized ? [localized] : [];
+  });
+}
 export function getVisibleProducts(locale: AppLocale) {
-  const source = publishedProducts.length > 0 ? publishedProducts : process.env.NODE_ENV === "development" ? sortProducts(products.filter((item) => item.developmentOnly)) : [];
-  return source.flatMap((product) => {const localized = localizeProduct(product, locale); return localized ? [localized] : [];});
+  if (process.env.NODE_ENV === "development") return getDevelopmentPreviewProducts(locale);
+  return publishedProducts.flatMap((product) => {const localized = localizeProduct(product, locale); return localized ? [localized] : [];});
 }
 export function getVisibleProductBySlug(slug: string, locale: AppLocale) {
   const product = process.env.NODE_ENV === "development" ? products.find((item) => item.slug === slug && item.status !== "archived") : publishedProducts.find((item) => item.slug === slug);
