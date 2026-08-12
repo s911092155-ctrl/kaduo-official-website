@@ -132,15 +132,15 @@ function cactusImageTexts(locale: AppLocale, alts: {main: string; scenes: string
 }
 
 const blushHavenImages: ProductImages<ProductImageAsset> = {
-  main: {src:"/images/products/blush-haven/hero/blush-haven-hero-desktop.png",sourceType:"concept-render",publicApproved:false},
+  main: {src:"/_local-preview/blush-haven/hero/blush-haven-hero-desktop.png",sourceType:"concept-render",publicApproved:false},
   scenes: [
-    {src:"/images/products/blush-haven/hero/blush-haven-hero-mobile.png",sourceType:"concept-render",publicApproved:false},
-    {src:"/images/products/blush-haven/lifestyle/blush-haven-cat-lifestyle.png",sourceType:"concept-render",publicApproved:false},
-    {src:"/images/products/blush-haven/gallery/blush-haven-shared-living.png",sourceType:"concept-render",publicApproved:false},
+    {src:"/_local-preview/blush-haven/hero/blush-haven-hero-mobile.png",sourceType:"concept-render",publicApproved:false},
+    {src:"/_local-preview/blush-haven/lifestyle/blush-haven-cat-lifestyle.png",sourceType:"concept-render",publicApproved:false},
+    {src:"/_local-preview/blush-haven/gallery/blush-haven-shared-living.png",sourceType:"concept-render",publicApproved:false},
   ],
   details: [
-    {src:"/images/products/blush-haven/details/blush-haven-acrylic-detail.png",sourceType:"concept-render",publicApproved:false},
-    {src:"/images/products/blush-haven/product/blush-haven-card.png",sourceType:"concept-render",publicApproved:false},
+    {src:"/_local-preview/blush-haven/details/blush-haven-acrylic-detail.png",sourceType:"concept-render",publicApproved:false},
+    {src:"/_local-preview/blush-haven/product/blush-haven-card.png",sourceType:"concept-render",publicApproved:false},
   ],
   dimensions: [], drawings: [], prototypes: [],
 };
@@ -234,7 +234,7 @@ const blushHavenZhCN: ProductTranslation = {
     {title:"自在休憩",description:"产品设计包含供猫咪停留和坐卧的内部空间及顶部中心区域。"},
     {title:"陪伴互动",description:"猫咪进入家具后仍处在人与猫共同使用的客厅区域，让陪伴自然发生在日常生活中。"}
   ],
-  materials:["粉色透明亚克力","V6设计阶段参数 / 待打样确认"], materialDescription:"V6设计方案以粉色透明亚克力构成主要视觉结构，并根据不同部位设置不同设计厚度。最终材质规格与厚度以打样确认结果为准。", materialNote:"顶层台面、底层垫面、猫兜、中层腰线、装饰柱、门扇、造型花朵与品牌 Logo 的厚度均为 V6 设计阶段标注，不作为最终生产参数。",
+  materials:["粉色透明亚克力"], materialDescription:"V6设计方案以粉色透明亚克力构成主要视觉结构，并根据不同部位设置不同设计厚度。最终材质规格与厚度以打样确认结果为准。", materialNote:"顶层台面、底层垫面、猫兜、中层腰线、装饰柱、门扇、造型花朵与品牌 Logo 的厚度均为 V6 设计阶段标注，不作为最终生产参数。",
   dimensionsDisplay:"V6设计参考尺寸\nW800 × D800 × H410 mm", dimensionsNote:"当前尺寸依据V6设计阶段图纸整理，图纸仍注明“产品需打样确认”。最终生产尺寸以打样及确认版工程资料为准。",
   modules:[{name:"顶部中心开孔设计",description:"V6设计阶段图纸中可见顶部中心开孔；图纸同时提供猫兜方案，最终配置尚未确认。"}], moduleNote:"V6原始图纸脚轮示意待设计方修订，品牌最终配置为无脚轮。猫兜或活动板、连接件、防滑垫、安装工具、Logo 与造型花朵均未列入当前标准配置。", colors:[{name:"粉色透明",value:null}], prototypeNote:null,
   standardExclusions:["坐垫","猫咪","家居场景陈设"], cushionNote:"图片中的坐垫仅作使用场景示意，不包含在产品标准配置中。消费者可根据实际内部空间自行选择适配软垫，其材质和清洁方式以所购买坐垫说明为准。", displayNotice:"本页图片均为产品效果示意图，当前画面用于展示设计概念与家居场景，最终结构、颜色与配置以确认版产品为准。",
@@ -248,7 +248,7 @@ const blushHavenZhTW: ProductTranslation = {
   detailIntroduction:["粉色貓茶几從人與貓共同使用客廳的方式出發，將日常茶几與貓咪的休息、躲藏和共處空間結合在同一件傢俱中。","對人而言，它保有茶几應有的日常使用方式；對貓而言，傢俱內部則是可以進入、停留並觀察家中環境的空間。人與貓不需要各自佔據一套傢俱，而是在同一個客廳裡自然共享生活。"],
   designConceptTitle:"一張茶几，也是貓的角落", designConcept:"粉色貓茶几把人的茶几使用方式與貓咪的日常停留放在同一個客廳尺度中。\n\n內部圍合空間與頂部中心區域來自目前設計方案；它們讓貓咪能夠進入、坐臥並觀察周圍，而人的日常使用也仍留在同一張傢俱上。",
   features:[{title:"人貓共用",description:"人的茶几功能與貓咪使用空間融合在一件傢俱中，減少傳統寵物用品與居家傢俱彼此割裂的感覺。"},{title:"安靜躲藏",description:"內部圍合空間為貓咪提供進入、停留和觀察家中環境的位置。"},{title:"自在休憩",description:"產品設計包含供貓咪停留和坐臥的內部空間及頂部中心區域。"},{title:"陪伴互動",description:"貓咪進入傢俱後仍處在人與貓共同使用的客廳區域，讓陪伴自然發生在日常生活中。"}],
-  materials:["粉色透明壓克力","V6設計階段參數 / 待打樣確認"], materialDescription:"V6設計方案以粉色透明壓克力構成主要視覺結構，並依不同部位設定不同設計厚度。最終材質規格與厚度以打樣確認結果為準。", materialNote:"頂層檯面、底層墊面、貓兜、中層腰線、裝飾柱、門扇、造型花朵與品牌 Logo 的厚度皆為 V6 設計階段標註，不作為最終生產參數。",
+  materials:["粉色透明壓克力"], materialDescription:"V6設計方案以粉色透明壓克力構成主要視覺結構，並依不同部位設定不同設計厚度。最終材質規格與厚度以打樣確認結果為準。", materialNote:"頂層檯面、底層墊面、貓兜、中層腰線、裝飾柱、門扇、造型花朵與品牌 Logo 的厚度皆為 V6 設計階段標註，不作為最終生產參數。",
   dimensionsDisplay:"V6設計參考尺寸\nW800 × D800 × H410 mm", dimensionsNote:"目前尺寸依 V6 設計階段圖紙整理，圖紙仍註明「產品需打樣確認」。最終生產尺寸以打樣及確認版工程資料為準。",
   modules:[{name:"頂部中心開孔設計",description:"V6設計階段圖紙中可見頂部中心開孔；圖紙同時提供貓兜方案，最終配置尚未確認。"}], moduleNote:"V6原始圖紙腳輪示意待設計方修訂，品牌最終配置為無腳輪。貓兜或活動板、連接件、防滑墊、安裝工具、Logo 與造型花朵均未列入目前標準配置。", colors:[{name:"粉色透明",value:null}],
   standardExclusions:["坐墊","貓咪","居家情境陳設"], cushionNote:"圖片中的坐墊僅作使用情境示意，不包含在產品標準配置中。消費者可依實際內部空間自行選擇適配軟墊，其材質和清潔方式以所購買坐墊說明為準。", displayNotice:"本頁圖片皆為產品效果示意圖，目前畫面用於呈現設計概念與居家情境，最終結構、顏色與配置以確認版產品為準。",
@@ -262,7 +262,7 @@ const blushHavenEn: ProductTranslation = {
   detailIntroduction:["Blush Haven begins with how people and cats share a living room, bringing an everyday coffee table together with places for a cat to rest, retreat and stay close by.","For people, it keeps the familiar role of a coffee table. For cats, the interior becomes a place to enter, pause and observe the room. Both uses sit naturally within the same living space."],
   designConceptTitle:"A coffee table, and a corner for the cat", designConcept:"Blush Haven places everyday table use and a cat's place to pause within the same living-room scale.\n\nThe enclosed interior and central top area come from the current design proposal. They give cats room to enter, sit and observe, while everyday table use remains part of the same piece.",
   features:[{title:"Shared use",description:"The coffee-table function and a cat's place to stay are brought together in one piece, reducing the separation between pet equipment and home furniture."},{title:"A quiet retreat",description:"The enclosed interior gives cats a place to enter, stay and observe the home."},{title:"Everyday rest",description:"The design includes an interior area and a central top area where cats can pause and sit."},{title:"Living alongside",description:"When a cat enters the piece, it remains within the shared living-room setting, where companionship is part of everyday life."}],
-  materials:["Pink transparent acrylic","V6 design-stage parameters / pending prototype confirmation"], materialDescription:"The V6 design proposal uses pink transparent acrylic for the main visual structure, with different design thicknesses assigned to different parts. Final material specification and thickness are subject to prototype confirmation.", materialNote:"Thicknesses shown for the top, lower pad, cat hammock, waist band, decorative columns, door panels, flower shapes and logo are V6 design-stage notes, not final production specifications.",
+  materials:["Pink transparent acrylic"], materialDescription:"The V6 design proposal uses pink transparent acrylic for the main visual structure, with different design thicknesses assigned to different parts. Final material specification and thickness are subject to prototype confirmation.", materialNote:"Thicknesses shown for the top, lower pad, cat hammock, waist band, decorative columns, door panels, flower shapes and logo are V6 design-stage notes, not final production specifications.",
   dimensionsDisplay:"V6 design reference dimensions\nW800 × D800 × H410 mm", dimensionsNote:"These dimensions are drawn from the V6 design-stage drawing, which still notes that a prototype confirmation is required. Final production dimensions are subject to prototype and approved engineering information.",
   modules:[{name:"Central opening in the top",description:"The V6 design-stage drawing shows a central opening in the top and a hammock option; final configuration remains unconfirmed."}], moduleNote:"The caster illustration in the original V6 drawing awaits revision by the designer. The confirmed brand configuration has no casters. The hammock or movable panel, connections, anti-slip pads, installation tools, logo and flower shapes are not listed in the current standard configuration.", colors:[{name:"Transparent blush",value:null}],
   standardExclusions:["Cushions","Cats","Home furnishings shown in scenes"], cushionNote:"Cushions shown in images are for use-scene illustration only and are not included with the standard product. Customers may select a suitable cushion for the interior; material and care follow the cushion purchased.", displayNotice:"All images on this page are product concept visuals. They illustrate the design idea and home setting; final structure, colour and configuration are subject to the confirmed product.",
@@ -276,7 +276,7 @@ function developmentTranslation(name: string, summary: string, mainAlt: string):
 
 export const products: Product[] = [
   {id:"cactus-haven-acrylic-cat-tree",slug:"cactus-haven-acrylic-cat-tree",status:"draft",developmentOnly:false,sortOrder:10,featuredOnHome:false,overallDimensions:"W1500 × D980 × H2110 mm",weight:null,suitableCats:null,images:cactusImages,moduleImages:Array(11).fill(null),video:{cover:null,url:null},translations:{"zh-CN":cactusZhCN,"zh-TW":cactusZhTW,en:cactusEn}},
-  {id:"blush-haven-cat-coffee-table",slug:"blush-haven-cat-coffee-table",status:"draft",developmentOnly:false,sortOrder:20,featuredOnHome:false,overallDimensions:"W800 × D800 × H410 mm",weight:null,suitableCats:null,images:blushHavenImages,moduleImages:[],video:{cover:null,url:null},translations:{"zh-CN":blushHavenZhCN,"zh-TW":blushHavenZhTW,en:blushHavenEn}},
+  {id:"blush-haven-cat-coffee-table",slug:"blush-haven-cat-coffee-table",status:"draft",developmentOnly:false,sortOrder:20,featuredOnHome:false,overallDimensions:null,weight:null,suitableCats:null,images:blushHavenImages,moduleImages:[],video:{cover:null,url:null},translations:{"zh-CN":blushHavenZhCN,"zh-TW":blushHavenZhTW,en:blushHavenEn}},
   {id:"development-transparent-home",slug:"development-transparent-home",status:"draft",developmentOnly:true,sortOrder:30,featuredOnHome:false,overallDimensions:null,weight:null,suitableCats:null,images:{main:{src:"/images/homepage/hero-living-room.png"},scenes:[],details:[],dimensions:[],drawings:[],prototypes:[]},moduleImages:[],video:{cover:null,url:null},translations:{"zh-CN":developmentTranslation("透明共居家具（开发演示）","这条记录只用于检查产品中心与详情页布局，不代表凯朵已经发布的正式产品。","明亮客厅中的透明宠物家具与猫咪开发演示图，不代表正式产品")}},
   {id:"development-shared-space",slug:"development-shared-space",status:"draft",developmentOnly:true,sortOrder:40,featuredOnHome:false,overallDimensions:null,weight:null,suitableCats:null,images:{main:{src:"/images/cats/cat-family-living-room.png"},scenes:[],details:[],drawings:[],dimensions:[],prototypes:[]},moduleImages:[],video:{cover:null,url:null},translations:{"zh-CN":developmentTranslation("共居空间单元（开发演示）","用于验证增加多款产品后的卡片排序与前后导航，生产环境不会显示。","猫咪在现代客厅中的共居空间开发演示图")}}
 ];

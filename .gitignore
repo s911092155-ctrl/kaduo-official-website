@@ -12,6 +12,10 @@
 
 # testing
 /coverage
+/artifacts/
+
+# local-only previews; unapproved assets must never be committed to public
+/public/_local-preview/
 
 # next.js
 /.next/

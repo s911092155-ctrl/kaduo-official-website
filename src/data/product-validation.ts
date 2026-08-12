@@ -43,7 +43,8 @@ export function validateProducts(products: Product[]) {
     imageEntries.forEach(({field,image}) => {
       const source = image.src.trim();
       if (!source) errors.push(`${label} · ${field}.src：图片路径不能为空。`);
-      else if (source.startsWith("/") && !source.startsWith("/images/")) errors.push(`${label} · ${field}.src：本地图片路径必须以 /images/ 开头。`);
+      else if (source.startsWith("/") && !source.startsWith("/images/") && !source.startsWith("/_local-preview/")) errors.push(`${label} · ${field}.src：本地图片路径必须以 /images/ 开头；未获公开授权的本机预览素材可使用 /_local-preview/。`);
+      if (source.startsWith("/_local-preview/") && image.publicApproved !== false) errors.push(`${label} · ${field}.publicApproved：本机预览目录中的图片必须标记为未获公开授权。`);
     });
 
     Object.entries(product.translations).forEach(([rawLocale, translation]) => {
